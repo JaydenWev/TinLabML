@@ -30,7 +30,9 @@ class Node:
 
     def getValue(self):
         pass
-
+    
+    def print(self):
+        print("test")
 
 
 class Edge:
