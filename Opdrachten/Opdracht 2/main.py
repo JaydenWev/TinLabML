@@ -7,7 +7,16 @@ Main design choices
 
 Test specification
 
+TO DO
+1. inputNodes pakken een waarde van de matric en gooien die door de sigmoid()
+2. waarde gaat door edge en wordt geamplified
+3. in netwerkNode gaat de waarde door de sigmoid
 
+de netwerkNodes die pakken de waarde van de inputNodes
+    in de edges worden de waardes gemultiplied met de amplification
+
+   Return value is een recusieve functie
+   Nodes overerven
 '''
 import math as mt
 
@@ -19,9 +28,8 @@ class Node:
     def sigmoid(self, x):
         return  1 / (1 + mt.exp(-x))
 
-    def getValue():
+    def getValue(self):
         pass
-
 
 
 
@@ -31,31 +39,26 @@ class Edge:
         self.inputNode = None
         self.outputNode = None
         
-    def getValue();
+    def getValue():
+        pass
     
 
 
-
-'''
-nodes maken met koppeling naar elkaar
-
-'''
 cross_1 = ([0, 1, 0],
             [1, 1, 1],
             [0, 1, 0], "cross")
 
-cross_2 = [[1, 0, 1],
+cross_2 = ([1, 0, 1],
             [0, 1, 0],
             [1, 0, 1], "cross")
 
-circle_1 = [[1, 1, 1],
+circle_1 = ([1, 1, 1],
             [1, 0, 1],
             [1, 1, 1], "circle")
 
-circle_2 = [[0, 1, 0],
+circle_2 = ([0, 1, 0],
             [1, 0, 1],
             [0, 1, 0], "circle")
-]
 
 
 OutputNodes = []
@@ -74,14 +77,3 @@ for x in range(9):
         edge.inputNode = InputNodes[x]          # set edges input
         edge.outputNode = OutputNodes[y]        # set edges output
 
-'''
-1. inputNodes pakken een waarde van de matric en gooien die door de sigmoid()
-2. waarde gaat door edge en wordt geamplified
-3. in netwerkNode gaat de waarde door de sigmoid
-
-de netwerkNodes die pakken de waarde van de inputNodes
-    in de edges worden de waardes gemultiplied met de amplification
-
-   Return value is een recusieve functie
-   Nodes overerven
-'''
