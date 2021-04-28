@@ -19,6 +19,10 @@ class Node:
     def sigmoid(self, x):
         return  1 / (1 + mt.exp(-x))
 
+    def getValue():
+        pass
+
+
 
 
 class Edge:
@@ -26,27 +30,32 @@ class Edge:
         self.amplification = 1
         self.inputNode = None
         self.outputNode = None
+        
+    def getValue();
+    
+
 
 
 '''
 nodes maken met koppeling naar elkaar
 
 '''
-cross_1 = [[0, 1, 0],
+cross_1 = ([0, 1, 0],
             [1, 1, 1],
-            [0, 1, 0]]
+            [0, 1, 0], "cross")
 
 cross_2 = [[1, 0, 1],
             [0, 1, 0],
-            [1, 0, 1]]
+            [1, 0, 1], "cross")
 
 circle_1 = [[1, 1, 1],
             [1, 0, 1],
-            [1, 1, 1]]
+            [1, 1, 1], "circle")
 
 circle_2 = [[0, 1, 0],
             [1, 0, 1],
-            [0, 1, 0]]
+            [0, 1, 0], "circle")
+]
 
 
 OutputNodes = []
