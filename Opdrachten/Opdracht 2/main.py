@@ -20,6 +20,7 @@ de netwerkNodes die pakken de waarde van de inputNodes
 '''
 # Imports
 import math as mt
+import numpy as np
 import itertools as it
 
 # Matrices
@@ -31,9 +32,9 @@ cross_2 = ([1, 0, 1],
             [0, 1, 0],
             [1, 0, 1]) # "cross")
 
-circle_1 = ([1, 1, 1],
+circle_1 = np.array([[1, 1, 1],
             [1, 0, 1],
-            [1, 1, 1]) # "circle")
+            [1, 1, 1]]) # "circle")
 
 circle_2 = ([0, 1, 0],
             [1, 0, 1],
@@ -46,19 +47,19 @@ class Node: # base node
         self.outputEdges = []
 
     def sigmoid(self, x):
+        print(1 / (1 + mt.exp(-x)))
         return  1 / (1 + mt.exp(-x))
 
 class BeginNode(Node): # inputNodes
-    def __init__(self, id, matrix):
+    def __init__(self,value):
         self.inputEdges = []
         self.outputEdges = []
-        self.flatMatrix = list(it.chain(*matrix))
+        self.value = value
 
-    def getStartValue(self):
-        self.startValue = self.flatMatrix[id]
-
+        
     def getValue(self):
-        return self.sigmoid(self.startValue)
+        self.sigmoid(self.value)
+        return self.sigmoid(self.value)
 
 class NetworkNode(Node): # outputNodes
     temp = 0
@@ -75,7 +76,6 @@ class Edge: # Edge
         self.outputNode = None
         
     def getValue():
-        print(self.inputNode.getValue())
         return self.inputNode.getValue() * self.amplification
 
 # Main code
@@ -90,17 +90,18 @@ def createNetwork(matrix):
         outputNodes.append(NetworkNode())
 
     for x in range(nodesInLayer_1): # create input nodes
-        inputNodes.append(BeginNode(x, matrix))
+        inputNodes.append(BeginNode(matrix[x]))
+        print(inputNodes[x].getValue)
         for y in range(nodesInOutputLayer):
             edge = Edge()
             inputNodes[x].inputEdges.append(edge)
             edge.inputNode = inputNodes[x]          # set edges input
             edge.outputNode = outputNodes[y]        # set edges output
             outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
+print (circle_1.flatten()[0])
+createNetwork(circle_1.flatten()) # possibly easier to 'insert' list into the network into a function
 
-createNetwork(circle_1) # possibly easier to 'insert' list into the network into a function
-
-print(list(it.chain(*cross_1)), "\n")
+#print(list(it.chain(*cross_1)), "\n")
 
 outputNodes[0].getValue()
 
