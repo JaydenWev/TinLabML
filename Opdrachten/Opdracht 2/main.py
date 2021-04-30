@@ -17,6 +17,11 @@ de netwerkNodes die pakken de waarde van de inputNodes
 
    Return value is een recusieve functie
    Nodes overerven
+   
+   
+   circle = [0,1]
+   cross = [1,0]
+   
 '''
 # Imports
 import math as mt
@@ -117,6 +122,24 @@ class Network:
         vector[0] /= factor # take the quotient to normalize the vector
         vector[1] /= factor
         return vector # return the normalized vector
+        
+    def edgeLoop(self,amplifiedIndex, value):
+        x = 0
+        for outputNode in self.outputNodes:
+            for inputEdge in outputNode.inputEdges:
+                if amplifiedIndex == x:
+                    inputEdge.setAmplification(value)
+                print(inputEdge.amplification)
+                x += 1
+    
+        
+       
+                
+         
+  
+  
+        
+   
     
     
             
@@ -126,6 +149,7 @@ class Network:
 net = Network(circle_2.flatten())
 net.createNetwork()
 print(net.normalize(net.getValueOutputNodes()))
+net.edgeLoop(2,1)
+print(net.normalize(net.getValueOutputNodes()))
 
-
-
+#input array moeten meerdere arrays worden zodat het een hele trainingset wordt
