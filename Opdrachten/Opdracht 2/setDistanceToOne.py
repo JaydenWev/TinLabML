@@ -6,3 +6,8 @@ def normalize(vector):
     vector[1] /= factor
     return vector # return the normalized vector
 print(normalize(vector))
+
+
+def sigmoid(x):
+        return  1 / (1 + mt.exp(-x))
+print(sigmoid(1))
