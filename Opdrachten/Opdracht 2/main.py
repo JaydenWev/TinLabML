@@ -53,6 +53,8 @@ class Node: # base node
 class BeginNode(Node): # inputNodes
     def __init__(self,value):
         self.value = value
+        self.inputEdges = []
+        self.outputEdges = []
 
         
     def getValue(self):
@@ -100,4 +102,5 @@ createNetwork(circle_1.flatten()) # possibly easier to 'insert' list into the ne
 #print(list(it.chain(*cross_1)), "\n")
 
 print(outputNodes[0].getValue())
+print(outputNodes[1].getValue())
 
