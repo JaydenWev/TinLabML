@@ -25,21 +25,21 @@ import itertools as it
 # Matrices
 cross_1 = ([0, 1, 0],
             [1, 1, 1],
-            [0, 1, 0], "cross")
+            [0, 1, 0]) # "cross")
 
 cross_2 = ([1, 0, 1],
             [0, 1, 0],
-            [1, 0, 1], "cross")
+            [1, 0, 1]) # "cross")
 
 circle_1 = ([1, 1, 1],
             [1, 0, 1],
-            [1, 1, 1], "circle")
+            [1, 1, 1]) # "circle")
 
 circle_2 = ([0, 1, 0],
             [1, 0, 1],
-            [0, 1, 0], "circle")
+            [0, 1, 0]) # "circle")
 
-# Classes
+# Classes defenition
 class Node: # base node
     def __init__(self):
         self.inputEdges = []
@@ -64,10 +64,9 @@ class NetworkNode(Node): # outputNodes
     temp = 0
     def getValue(self):
         for x in self.inputEdges:
-            self.temp += self.sigmoid(self.inputEdges[x].getValue()) # ERROR returned Edge geen int
+            self.temp += self.sigmoid(self.inputEdges[x].getValue()) # ERROR in de getValue returned iets van het type Edge
             print(self.temp)
         return self.temp
-        
 
 class Edge: # Edge
     def __init__(self):
@@ -79,29 +78,29 @@ class Edge: # Edge
         print(self.inputNode.getValue())
         return self.inputNode.getValue() * self.amplification
 
-
-
+# Main code
 inputNodes = []
 outputNodes = []
 
+nodesInLayer_1 = 9
+nodesInOutputLayer = 2
 
 def createNetwork(matrix):
-    for x in range(2): # create output nodes
+    for x in range(nodesInOutputLayer): # create output nodes
         outputNodes.append(NetworkNode())
 
-    for x in range(9): # create input nodes
+    for x in range(nodesInLayer_1): # create input nodes
         inputNodes.append(BeginNode(x, matrix))
-        for y in range(2):
+        for y in range(nodesInOutputLayer):
             edge = Edge()
             inputNodes[x].inputEdges.append(edge)
             edge.inputNode = inputNodes[x]          # set edges input
             edge.outputNode = outputNodes[y]        # set edges output
             outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
 
-
 createNetwork(circle_1) # possibly easier to 'insert' list into the network into a function
 
-outputNodes[0].getValue()
+print(list(it.chain(*cross_1)), "\n")
 
-# print(list(it.chain(*cross_1)))
+outputNodes[0].getValue()
 
