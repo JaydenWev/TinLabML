@@ -100,7 +100,6 @@ def createNetwork(matrix):
 createNetwork(circle_2.flatten()) # possibly easier to 'insert' list into the network into a function
 
 #print(list(it.chain(*cross_1)), "\n")
-
-print(outputNodes[0].getValue())
-print(outputNodes[1].getValue())
+output = [outputNodes[0].getValue(), outputNodes[1].getValue()]
+print(output)
 
