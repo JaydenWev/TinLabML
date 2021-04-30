@@ -77,7 +77,7 @@ class Edge: # Edge
         
     def getValue(self):
         return self.inputNode.getValue() * self.amplification
-    def setAmp(self, amp)
+    def setAmp(self, amp):
         self.amplification = amp
         
 # Main code
