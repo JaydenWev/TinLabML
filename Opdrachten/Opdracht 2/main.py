@@ -133,18 +133,6 @@ class Network:
                 x += 1
     
         
-       
-                
-         
-  
-  
-        
-   
-    
-    
-            
-    
-
 
 net = Network(circle_2.flatten())
 net.createNetwork()
