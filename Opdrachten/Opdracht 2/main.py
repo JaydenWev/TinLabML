@@ -52,8 +52,6 @@ class Node: # base node
 
 class BeginNode(Node): # inputNodes
     def __init__(self,value):
-        self.inputEdges = []
-        self.outputEdges = []
         self.value = value
 
         
