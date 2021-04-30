@@ -47,7 +47,7 @@ class Node: # base node
         self.outputEdges = []
 
     def sigmoid(self, x):
-        print(1 / (1 + mt.exp(-x)))
+        # print(1 / (1 + mt.exp(-x)))
         return  1 / (1 + mt.exp(-x))
 
 class BeginNode(Node): # inputNodes
@@ -65,7 +65,7 @@ class NetworkNode(Node): # outputNodes
     def getValue(self):
         for inputEdge in self.inputEdges:
             self.temp += self.sigmoid(inputEdge.getValue()) # ERROR in de getValue returned iets van het type Edge
-            print(self.temp)
+            # print(self.temp)
         return self.temp
 
 class Edge: # Edge
@@ -96,10 +96,10 @@ def createNetwork(matrix):
             edge.inputNode = inputNodes[x]          # set edges input
             edge.outputNode = outputNodes[y]        # set edges output
             outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
-print (circle_1.flatten()[0])
+# print (circle_1.flatten()[0])
 createNetwork(circle_1.flatten()) # possibly easier to 'insert' list into the network into a function
 
 #print(list(it.chain(*cross_1)), "\n")
 
-outputNodes[0].getValue()
+print(outputNodes[0].getValue())
 
