@@ -1,4 +1,5 @@
 '''
+Bob, Boyd, Jayden, Keanu
 Prioritized requirements
     Input is een 2d matrix
 
@@ -84,6 +85,8 @@ outputNodes = []
 nodesInLayer_1 = 9
 nodesInOutputLayer = 2
 
+edgeCounter = 0
+
 def createNetwork(matrix):
     for x in range(nodesInOutputLayer): # create output nodes
         outputNodes.append(NetworkNode())
@@ -91,15 +94,22 @@ def createNetwork(matrix):
     for x in range(nodesInLayer_1): # create input nodes
         inputNodes.append(BeginNode(matrix[x]))
         for y in range(nodesInOutputLayer):
-            edge = Edge()
-            inputNodes[x].inputEdges.append(edge)
-            edge.inputNode = inputNodes[x]          # set edges input
-            edge.outputNode = outputNodes[y]        # set edges output
-            outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
+            edges[edgeCounter] = Edge()
+            inputNodes[x].inputEdges.append(edges[edgeCounter])
+            edges[edgeCounter].inputNode = inputNodes[x]          # set edges input
+            edges[edgeCounter].outputNode = outputNodes[y]        # set edges output
+            outputNodes[y].inputEdges.append(edges[edgeCounter])  # set edge as input for output node
+            edgeCounter += 1
 # print (circle_1.flatten()[0])
 createNetwork(circle_2.flatten()) # possibly easier to 'insert' list into the network into a function
 
 #print(list(it.chain(*cross_1)), "\n")
 output = [outputNodes[0].getValue(), outputNodes[1].getValue()]
-print(output)
+prevOutput = []
+
+print(output,"\n", prevOutput)
+
+def adjustAmplifications():
+    edges[edgeCounter]
+
 
