@@ -18,6 +18,11 @@ de netwerkNodes die pakken de waarde van de inputNodes
 
    Return value is een recusieve functie
    Nodes overerven
+   
+   
+   circle = [0,1]
+   cross = [1,0]
+   
 '''
 # Imports
 import math as mt
@@ -66,8 +71,8 @@ class NetworkNode(Node): # outputNodes
     def getValue(self):
         for inputEdge in self.inputEdges:
             self.temp += self.sigmoid(inputEdge.getValue()) # ERROR in de getValue returned iets van het type Edge
-            # print(self.temp)
         return self.temp
+
 
 class Edge: # Edge
     def __init__(self):
@@ -77,40 +82,63 @@ class Edge: # Edge
         
     def getValue(self):
         return self.inputNode.getValue() * self.amplification
-
-# Main code
-inputNodes = []
-outputNodes = []
-
-nodesInLayer_1 = 9
-nodesInOutputLayer = 2
-
-edgeCounter = 0
-
-def createNetwork(matrix):
-    for x in range(nodesInOutputLayer): # create output nodes
-        outputNodes.append(NetworkNode())
-
-    for x in range(nodesInLayer_1): # create input nodes
-        inputNodes.append(BeginNode(matrix[x]))
-        for y in range(nodesInOutputLayer):
-            edges[edgeCounter] = Edge()
-            inputNodes[x].inputEdges.append(edges[edgeCounter])
-            edges[edgeCounter].inputNode = inputNodes[x]          # set edges input
-            edges[edgeCounter].outputNode = outputNodes[y]        # set edges output
-            outputNodes[y].inputEdges.append(edges[edgeCounter])  # set edge as input for output node
-            edgeCounter += 1
-# print (circle_1.flatten()[0])
-createNetwork(circle_2.flatten()) # possibly easier to 'insert' list into the network into a function
-
-#print(list(it.chain(*cross_1)), "\n")
-output = [outputNodes[0].getValue(), outputNodes[1].getValue()]
-prevOutput = []
-
-print(output,"\n", prevOutput)
-
-def adjustAmplifications():
-    edges[edgeCounter]
+        
+    def setAmplification(self, amplification):
+        self.amplification = amplification
+        
 
 
-# ...
+
+
+class Network:
+    def __init__(self,inputArray):
+        self.inputArray = inputArray
+        self.inputNodes = []
+        self.outputNodes = []
+        self.nodesInOutputLayer = 2
+        #self.netWorkNode = NetworkNode()
+    
+    def createNetwork(self):
+        for x in range(self.nodesInOutputLayer): # create output nodes
+            self.outputNodes.append(NetworkNode())
+
+        for x in range(len(self.inputArray)): # create input nodes
+            self.inputNodes.append(BeginNode(self.inputArray[x]))
+            for y in range(self.nodesInOutputLayer):
+                edge = Edge()
+                self.inputNodes[x].inputEdges.append(edge)
+                edge.inputNode = self.inputNodes[x]          # set edges input
+                edge.outputNode = self.outputNodes[y]        # set edges output
+                self.outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
+    
+
+    def getValueOutputNodes(self):
+        ValueOutputNodes = []
+        for x in range(self.nodesInOutputLayer):
+            ValueOutputNodes.append(self.outputNodes[x].getValue())
+        return ValueOutputNodes
+        
+    def normalize(self,vector):
+        factor = mt.sqrt(mt.pow(vector[0],2) + mt.pow(vector[1],2)) #sqaures the two values and take the sqrt from items
+        vector[0] /= factor # take the quotient to normalize the vector
+        vector[1] /= factor
+        return vector # return the normalized vector
+        
+    def edgeLoop(self,amplifiedIndex, value):
+        x = 0
+        for outputNode in self.outputNodes:
+            for inputEdge in outputNode.inputEdges:
+                if amplifiedIndex == x:
+                    inputEdge.setAmplification(value)
+                print(inputEdge.amplification)
+                x += 1
+    
+        
+
+net = Network(circle_2.flatten())
+net.createNetwork()
+print(net.normalize(net.getValueOutputNodes()))
+net.edgeLoop(2,1)
+print(net.normalize(net.getValueOutputNodes()))
+
+#input array moeten meerdere arrays worden zodat het een hele trainingset wordt
