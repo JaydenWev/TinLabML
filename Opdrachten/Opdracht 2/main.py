@@ -77,6 +77,7 @@ class Edge: # Edge
         
     def getValue(self):
         return self.inputNode.getValue() * self.amplification
+        
     def setAmplification(self, amplification):
         self.amplification = amplification
         
@@ -84,14 +85,14 @@ class Edge: # Edge
 inputNodes = []
 outputNodes = []
 
-nodesInLayer_1 = 9
+
 nodesInOutputLayer = 2
 
-def createNetwork(matrix):
+def createNetwork(matrix, lenght):
     for x in range(nodesInOutputLayer): # create output nodes
         outputNodes.append(NetworkNode())
 
-    for x in range(nodesInLayer_1): # create input nodes
+    for x in range(lenght): # create input nodes
         inputNodes.append(BeginNode(matrix[x]))
         for y in range(nodesInOutputLayer):
             edge = Edge()
@@ -100,7 +101,7 @@ def createNetwork(matrix):
             edge.outputNode = outputNodes[y]        # set edges output
             outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
 # print (circle_1.flatten()[0])
-createNetwork(circle_2.flatten()) # possibly easier to 'insert' list into the network into a function
+createNetwork(circle_2.flatten(), len(circle_2.flatten())) # possibly easier to 'insert' list into the network into a function
 
 #print(list(it.chain(*cross_1)), "\n")
 
