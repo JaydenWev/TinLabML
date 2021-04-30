@@ -111,13 +111,21 @@ class Network:
         for x in range(self.nodesInOutputLayer):
             ValueOutputNodes.append(self.outputNodes[x].getValue())
         return ValueOutputNodes
+        
+    def normalize(self,vector):
+        factor = mt.sqrt(mt.pow(vector[0],2) + mt.pow(vector[1],2)) #sqaures the two values and take the sqrt from items
+        vector[0] /= factor # take the quotient to normalize the vector
+        vector[1] /= factor
+        return vector # return the normalized vector
+    
+    
             
     
 
 
 net = Network(circle_2.flatten())
 net.createNetwork()
-print(net.getValueOutputNodes())
+print(net.normalize(net.getValueOutputNodes()))
 
 
 
