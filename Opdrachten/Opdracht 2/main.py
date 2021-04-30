@@ -68,6 +68,7 @@ class NetworkNode(Node): # outputNodes
             # print(self.temp)
         return self.temp
 
+
 class Edge: # Edge
     def __init__(self):
         self.amplification = 1
@@ -76,7 +77,9 @@ class Edge: # Edge
         
     def getValue(self):
         return self.inputNode.getValue() * self.amplification
-
+    def setAmp(self, amp)
+        self.amplification = amp
+        
 # Main code
 inputNodes = []
 outputNodes = []
