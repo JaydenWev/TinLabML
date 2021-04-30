@@ -58,14 +58,13 @@ class BeginNode(Node): # inputNodes
 
         
     def getValue(self):
-        self.sigmoid(self.value)
         return self.sigmoid(self.value)
 
 class NetworkNode(Node): # outputNodes
     temp = 0
     def getValue(self):
-        for x in self.inputEdges:
-            self.temp += self.sigmoid(self.inputEdges[x].getValue()) # ERROR in de getValue returned iets van het type Edge
+        for inputEdge in self.inputEdges:
+            self.temp += self.sigmoid(inputEdge.getValue()) # ERROR in de getValue returned iets van het type Edge
             print(self.temp)
         return self.temp
 
@@ -75,7 +74,7 @@ class Edge: # Edge
         self.inputNode = None
         self.outputNode = None
         
-    def getValue():
+    def getValue(self):
         return self.inputNode.getValue() * self.amplification
 
 # Main code
@@ -91,7 +90,6 @@ def createNetwork(matrix):
 
     for x in range(nodesInLayer_1): # create input nodes
         inputNodes.append(BeginNode(matrix[x]))
-        print(inputNodes[x].getValue)
         for y in range(nodesInOutputLayer):
             edge = Edge()
             inputNodes[x].inputEdges.append(edge)
