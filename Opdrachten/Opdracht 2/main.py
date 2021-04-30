@@ -24,21 +24,21 @@ import numpy as np
 import itertools as it
 
 # Matrices
-cross_1 = ([0, 1, 0],
-            [1, 1, 1],
-            [0, 1, 0]) # "cross")
+cross_1 = np.array([[0, 1, 0],
+                    [1, 1, 1],
+                    [0, 1, 0]]) # "cross")
 
-cross_2 = ([1, 0, 1],
-            [0, 1, 0],
-            [1, 0, 1]) # "cross")
+cross_2 = np.array([[1, 0, 1],
+                    [0, 1, 0],
+                    [1, 0, 1]]) # "cross")
 
 circle_1 = np.array([[1, 1, 1],
-            [1, 0, 1],
-            [1, 1, 1]]) # "circle")
+                    [1, 0, 1],
+                    [1, 1, 1]]) # "circle")
 
-circle_2 = ([0, 1, 0],
-            [1, 0, 1],
-            [0, 1, 0]) # "circle")
+circle_2 = np.array([[0, 1, 0],
+                    [1, 0, 1],
+                    [0, 1, 0]]) # "circle")
 
 # Classes defenition
 class Node: # base node
@@ -97,7 +97,7 @@ def createNetwork(matrix):
             edge.outputNode = outputNodes[y]        # set edges output
             outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
 # print (circle_1.flatten()[0])
-createNetwork(circle_1.flatten()) # possibly easier to 'insert' list into the network into a function
+createNetwork(circle_2.flatten()) # possibly easier to 'insert' list into the network into a function
 
 #print(list(it.chain(*cross_1)), "\n")
 
