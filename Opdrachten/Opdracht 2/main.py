@@ -39,11 +39,11 @@ cross_2 = np.array([[1, 0, 1],
                     [0, 1, 0],
                     [1, 0, 1]]) # "cross")
 
-circle_1 = np.array([[1, 1, 1],
+circle_1 =np.array([[1, 1, 1],
                     [1, 0, 1],
                     [1, 1, 1]]) # "circle")
 
-circle_2 = np.array([[0, 1, 0],
+circle_2 =np.array([[0, 1, 0],
                     [1, 0, 1],
                     [0, 1, 0]]) # "circle")
 
@@ -60,12 +60,15 @@ class Node: # base node
         return  1 / (1 + mt.exp(-x))
 
 class BeginNode(Node): # inputNodes
-    def __init__(self,value):
-        self.value = value
+    def __init__(self):
+        self.value = 0
         self.inputEdges = []
         self.outputEdges = []
 
-        
+    def setValue(self,value):
+        self.value = value
+
+    
     def getValue(self):
         return self.sigmoid(self.value)
 
@@ -86,8 +89,8 @@ class Edge: # Edge
     def getValue(self):
         return self.inputNode.getValue() * self.amplification
         
-    def setAmplification(self, amplification):
-        self.amplification = amplification
+    def addAmplification(self, amplification):
+        self.amplification += amplification
         
 
 
@@ -96,7 +99,6 @@ class Edge: # Edge
 class Network:
     def __init__(self,trainingSets):
         self.trainingSets = trainingSets
-        print(trainingSets[1])
         self.inputNodes = []
         self.outputNodes = []
         self.nodesInOutputLayer = 2
@@ -105,24 +107,33 @@ class Network:
     def createNetwork(self):
         for x in range(self.nodesInOutputLayer): # create output nodes
             self.outputNodes.append(NetworkNode())
-        for trainingSet in self.trainingSets:
-            for x in range(len(trainingSet)): # create input nodes
-                self.inputNodes.append(BeginNode(trainingSet[x]))
-                for y in range(self.nodesInOutputLayer):
-                    edge = Edge()
-                    self.inputNodes[x].inputEdges.append(edge)
-                    edge.inputNode = self.inputNodes[x]          # set edges input
-                    edge.outputNode = self.outputNodes[y]        # set edges output
-                    self.outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
+        for x in range(len(trainingSets[0])): # create input nodes
+            self.inputNodes.append(BeginNode())
+            for y in range(self.nodesInOutputLayer):
+                edge = Edge()
+                self.inputNodes[x].inputEdges.append(edge)
+                edge.inputNode = self.inputNodes[x]          # set edges input
+                edge.outputNode = self.outputNodes[y]        # set edges output
+                self.outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
     
-
+    def putSpecificSetInBeginNode(self,index):
+        x = 0
+        for value in trainingSets[index]:
+            self.inputNodes[x].setValue(value)
+            print(value)
+            x += 1
+            
+    
     def getValueOutputNodes(self):
         ValueOutputNodes = []
         for x in range(self.nodesInOutputLayer):
             ValueOutputNodes.append(self.outputNodes[x].getValue())
+            
+        #print(ValueOutputNodes)
         return ValueOutputNodes
         
-    def normalize(self,vector):
+    def normalize(self,vector,index):
+        self.putSpecificSetInBeginNode(index)
         factor = mt.sqrt(mt.pow(vector[0],2) + mt.pow(vector[1],2)) #sqaures the two values and take the sqrt from items
         vector[0] /= factor # take the quotient to normalize the vector
         vector[1] /= factor
@@ -133,7 +144,7 @@ class Network:
         for outputNode in self.outputNodes:
             for inputEdge in outputNode.inputEdges:
                 if amplifiedIndex == x:
-                    inputEdge.setAmplification(value)
+                    inputEdge.addAmplification(value)
                 print(inputEdge.amplification)
                 x += 1
     
@@ -141,9 +152,9 @@ class Network:
 
 net = Network(trainingSets)
 net.createNetwork()
-print(net.normalize(net.getValueOutputNodes()))
-net.edgeLoop(2,1)
-print(net.normalize(net.getValueOutputNodes()))
+print(net.normalize(net.getValueOutputNodes(),3))
+net.edgeLoop(3,1)
+print(net.normalize(net.getValueOutputNodes(),1))
 
 #input array moeten meerdere arrays worden zodat het een hele trainingset wordt
 #print (trainingSet.flatten())
