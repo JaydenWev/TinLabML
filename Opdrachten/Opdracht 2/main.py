@@ -47,7 +47,7 @@ circle_2 = np.array([[0, 1, 0],
                     [1, 0, 1],
                     [0, 1, 0]]) # "circle")
 
-trainingSet = np.array([cross_1,cross_2,circle_1,circle_2])
+trainingSets = np.array([cross_1,cross_2,circle_1,circle_2])
 
 # Classes defenition
 class Node: # base node
@@ -94,8 +94,8 @@ class Edge: # Edge
 
 
 class Network:
-    def __init__(self,inputArray):
-        self.inputArray = inputArray
+    def __init__(self,trainingSets):
+        self.trainingSets = trainingSets
         self.inputNodes = []
         self.outputNodes = []
         self.nodesInOutputLayer = 2
@@ -105,7 +105,7 @@ class Network:
         for x in range(self.nodesInOutputLayer): # create output nodes
             self.outputNodes.append(NetworkNode())
 
-        for x in range(len(self.inputArray)): # create input nodes
+        for x in range(len(self.trainingSets[0])): # create input nodes
             self.inputNodes.append(BeginNode(self.inputArray[x]))
             for y in range(self.nodesInOutputLayer):
                 edge = Edge()
