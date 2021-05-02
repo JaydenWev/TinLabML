@@ -28,8 +28,9 @@ de netwerkNodes die pakken de waarde van de inputNodes
 import math as mt
 import numpy as np
 import itertools as it
-
-
+import random
+circle = [0,1]
+cross = [1,0]
 # Matrices
 cross_1 = np.array([[0, 1, 0],
                     [1, 1, 1],
@@ -73,11 +74,13 @@ class BeginNode(Node): # inputNodes
         return self.sigmoid(self.value)
 
 class NetworkNode(Node): # outputNodes
-    temp = 0
+
+    
     def getValue(self):
+        temp = 0
         for inputEdge in self.inputEdges:
-            self.temp += self.sigmoid(inputEdge.getValue()) # ERROR in de getValue returned iets van het type Edge
-        return self.temp
+            temp += self.sigmoid(inputEdge.getValue()) # ERROR in de getValue returned iets van het type Edge
+        return temp
 
 
 class Edge: # Edge
@@ -120,7 +123,7 @@ class Network:
         x = 0
         for value in trainingSets[index]:
             self.inputNodes[x].setValue(value)
-            print(value)
+            #print(value)
             x += 1
             
     
@@ -145,16 +148,34 @@ class Network:
             for inputEdge in outputNode.inputEdges:
                 if amplifiedIndex == x:
                     inputEdge.addAmplification(value)
-                print(inputEdge.amplification)
+                    print(inputEdge.amplification)
                 x += 1
-    
+    def calculateAmps (self):
+        rand = random.randint(-10,10)/10
+        print("Rand",rand)
+        for x in range(4):
+            self.putSpecificSetInBeginNode(x)
+            for k in range(18):
+                net.edgeLoop(k,rand)
+                #opslaan van error gebeuren
+                net.edgeLoop(k,-rand)
+
+    def calculateError (self, vector, shape):
+        return mt.sqrt(mt.pow(shape[0]-vector[0],2) + mt.pow(shape[1]-vector[1],2))
         
 
+        
+        
 net = Network(trainingSets)
 net.createNetwork()
 print(net.normalize(net.getValueOutputNodes(),3))
-net.edgeLoop(3,1)
-print(net.normalize(net.getValueOutputNodes(),1))
 
+net.edgeLoop(3,0)
+net.calculateAmps()
+vec1 = [0.8,0.2]
+
+print(net.calculateError(vec1, cross))
+
+#print(random.randint(-10,10)/10)
 #input array moeten meerdere arrays worden zodat het een hele trainingset wordt
 #print (trainingSet.flatten())
