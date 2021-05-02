@@ -47,7 +47,7 @@ circle_2 = np.array([[0, 1, 0],
                     [1, 0, 1],
                     [0, 1, 0]]) # "circle")
 
-trainingSets = np.array([cross_1,cross_2,circle_1,circle_2])
+trainingSets = np.array([cross_1.flatten(),cross_2.flatten(),circle_1.flatten(),circle_2.flatten()])
 
 # Classes defenition
 class Node: # base node
@@ -96,6 +96,7 @@ class Edge: # Edge
 class Network:
     def __init__(self,trainingSets):
         self.trainingSets = trainingSets
+        print(trainingSets[1])
         self.inputNodes = []
         self.outputNodes = []
         self.nodesInOutputLayer = 2
@@ -104,15 +105,15 @@ class Network:
     def createNetwork(self):
         for x in range(self.nodesInOutputLayer): # create output nodes
             self.outputNodes.append(NetworkNode())
-
-        for x in range(len(self.trainingSets[0])): # create input nodes
-            self.inputNodes.append(BeginNode(self.inputArray[x]))
-            for y in range(self.nodesInOutputLayer):
-                edge = Edge()
-                self.inputNodes[x].inputEdges.append(edge)
-                edge.inputNode = self.inputNodes[x]          # set edges input
-                edge.outputNode = self.outputNodes[y]        # set edges output
-                self.outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
+        for trainingSet in self.trainingSets:
+            for x in range(len(trainingSet)): # create input nodes
+                self.inputNodes.append(BeginNode(trainingSet[x]))
+                for y in range(self.nodesInOutputLayer):
+                    edge = Edge()
+                    self.inputNodes[x].inputEdges.append(edge)
+                    edge.inputNode = self.inputNodes[x]          # set edges input
+                    edge.outputNode = self.outputNodes[y]        # set edges output
+                    self.outputNodes[y].inputEdges.append(edge)  # set edge as input for output node
     
 
     def getValueOutputNodes(self):
@@ -138,11 +139,11 @@ class Network:
     
         
 
-net = Network(circle_2.flatten())
+net = Network(trainingSets)
 net.createNetwork()
 print(net.normalize(net.getValueOutputNodes()))
 net.edgeLoop(2,1)
 print(net.normalize(net.getValueOutputNodes()))
 
 #input array moeten meerdere arrays worden zodat het een hele trainingset wordt
-print (trainingSet.flatten())
+#print (trainingSet.flatten())
