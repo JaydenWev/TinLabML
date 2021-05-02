@@ -29,6 +29,7 @@ import math as mt
 import numpy as np
 import itertools as it
 
+
 # Matrices
 cross_1 = np.array([[0, 1, 0],
                     [1, 1, 1],
@@ -45,6 +46,8 @@ circle_1 = np.array([[1, 1, 1],
 circle_2 = np.array([[0, 1, 0],
                     [1, 0, 1],
                     [0, 1, 0]]) # "circle")
+
+trainingSet = np.array([cross_1,cross_2,circle_1,circle_2])
 
 # Classes defenition
 class Node: # base node
@@ -142,3 +145,4 @@ net.edgeLoop(2,1)
 print(net.normalize(net.getValueOutputNodes()))
 
 #input array moeten meerdere arrays worden zodat het een hele trainingset wordt
+print (trainingSet.flatten())
