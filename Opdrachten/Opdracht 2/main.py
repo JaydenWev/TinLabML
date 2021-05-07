@@ -135,8 +135,9 @@ class Network:
         #print(ValueOutputNodes)
         return ValueOutputNodes
         
-    def normalize(self,vector,index):
+    def normalize(self,index):
         self.putSpecificSetInBeginNode(index)
+        vector = self.getValueOutputNodes()
         factor = mt.sqrt(mt.pow(vector[0],2) + mt.pow(vector[1],2)) #sqaures the two values and take the sqrt from items
         vector[0] /= factor # take the quotient to normalize the vector
         vector[1] /= factor
@@ -150,22 +151,62 @@ class Network:
                     inputEdge.addAmplification(value)
                     #print(inputEdge.amplification)
                 x += 1
+    
+    def printEdges(self):
+        for outputNode in self.outputNodes:
+            for inputEdge in outputNode.inputEdges:
+                    print(inputEdge.amplification)
+
+    
     def calculateAmps (self):
-        rand = random.randint(-10,10)/10
+       
+        rand = random.randint(0,10)/10
         errorArray = [None]*18
         print("Rand",rand)
+        rand = 0.1
         for x in range(4):
             self.putSpecificSetInBeginNode(x)
+            if x == 0 or x == 1:
+                shape = cross
+            else:
+                shape = circle
             for k in range(18):
-                net.edgeLoop(k,rand)
+                self.edgeLoop(k,rand)
                 #opslaan van error gebeuren
                 
-                errorArray[k] = net.calculateError(net.normalize(net.getValueOutputNodes(),x),cross)
+                errorArray[k] = self.calculateError(shape, x)
+                
+                if k == 0:
+                    error = self.calculateError(shape, x)
+                    index = k
+                    amplification_value = rand
+                else:
+                    if error > self.calculateError(shape, x):
+                        error = self.calculateError(shape, x)
+                        index = k 
+                        amplification_value = rand
+                     
                 #checken voor beste error
-                net.edgeLoop(k,-rand)
-        print (errorArray)
+                self.edgeLoop(k,-rand)
+                self.edgeLoop(k,-rand)
+                
+                if error > self.calculateError(shape, x):
+                        error = self.calculateError(shape, x)
+                        index = k 
+                        amplification_value = -rand
+                        
+                self.edgeLoop(k,rand)
+                        
+                
+                
+                
+        self.edgeLoop(index,amplification_value)
+        return error
         
-    def calculateError (self, vector, shape):
+        
+        
+    def calculateError (self, shape, index):
+        vector = self.normalize(index)
         return mt.sqrt(mt.pow(shape[0]-vector[0],2) + mt.pow(shape[1]-vector[1],2))
         
 
@@ -178,6 +219,16 @@ net.createNetwork()
 #net.edgeLoop(3,0)
 net.calculateAmps()
 #vec1 = [0.9,0.1]
+while net.calculateAmps() > 0.1:
+    print(net.calculateAmps())
+    
+net.printEdges()
+print("\n\n\n")
+
+print(net.normalize(0))
+print(net.normalize(1))
+print(net.normalize(2))
+print(net.normalize(3))
 
 #print(net.calculateError(vec1, cross))
 
