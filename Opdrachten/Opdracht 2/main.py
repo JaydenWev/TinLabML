@@ -148,18 +148,23 @@ class Network:
             for inputEdge in outputNode.inputEdges:
                 if amplifiedIndex == x:
                     inputEdge.addAmplification(value)
-                    print(inputEdge.amplification)
+                    #print(inputEdge.amplification)
                 x += 1
     def calculateAmps (self):
         rand = random.randint(-10,10)/10
+        errorArray = [None]*18
         print("Rand",rand)
         for x in range(4):
             self.putSpecificSetInBeginNode(x)
             for k in range(18):
                 net.edgeLoop(k,rand)
                 #opslaan van error gebeuren
+                
+                errorArray[k] = net.calculateError(net.normalize(net.getValueOutputNodes(),x),cross)
+                #checken voor beste error
                 net.edgeLoop(k,-rand)
-
+        print (errorArray)
+        
     def calculateError (self, vector, shape):
         return mt.sqrt(mt.pow(shape[0]-vector[0],2) + mt.pow(shape[1]-vector[1],2))
         
@@ -168,13 +173,13 @@ class Network:
         
 net = Network(trainingSets)
 net.createNetwork()
-print(net.normalize(net.getValueOutputNodes(),3))
+#print(net.normalize(net.getValueOutputNodes(),3))
 
-net.edgeLoop(3,0)
+#net.edgeLoop(3,0)
 net.calculateAmps()
-vec1 = [0.8,0.2]
+#vec1 = [0.9,0.1]
 
-print(net.calculateError(vec1, cross))
+#print(net.calculateError(vec1, cross))
 
 #print(random.randint(-10,10)/10)
 #input array moeten meerdere arrays worden zodat het een hele trainingset wordt
