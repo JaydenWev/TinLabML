@@ -160,46 +160,39 @@ class Network:
     
     def calculateAmps (self):
        
-        rand = random.randint(0,10)/10
+        rand = random.randint(-10,10)/10
         errorArray = [None]*18
         print("Rand",rand)
-        rand = 0.1
-        for x in range(4):
-            self.putSpecificSetInBeginNode(x)
-            if x == 0 or x == 1:
-                shape = cross
-            else:
-                shape = circle
-            for k in range(18):
-                self.edgeLoop(k,rand)
-                #opslaan van error gebeuren
-                
-                errorArray[k] = self.calculateError(shape, x)
-                
-                if k == 0:
-                    error = self.calculateError(shape, x)
-                    index = k
-                    amplification_value = rand
+
+        for k in range(18):
+            self.edgeLoop(k,rand)
+            #opslaan van error gebeuren            
+            #errorArray[k] = self.calculateError(shape, x)
+            for x in range(4):
+                current_error = 0
+                self.putSpecificSetInBeginNode(x)
+                if x == 0 or x == 1:
+                    shape = circle
                 else:
-                    if error > self.calculateError(shape, x):
-                        error = self.calculateError(shape, x)
-                        index = k 
-                        amplification_value = rand
-                     
-                #checken voor beste error
-                self.edgeLoop(k,-rand)
-                self.edgeLoop(k,-rand)
+                    shape = cross
                 
-                if error > self.calculateError(shape, x):
-                        error = self.calculateError(shape, x)
-                        index = k 
-                        amplification_value = -rand
-                        
-                self.edgeLoop(k,rand)
-                        
+                current_error += self.calculateError(shape, x)           
+            current_error /= 4 
+
                 
-                
-                
+            if k == 0:
+                error = current_error
+                index = k
+                amplification_value = rand
+            else:
+                if error > current_error:
+                    error = current_error
+                    index = k 
+                    amplification_value = rand
+                 
+            #checken voor beste error
+            self.edgeLoop(k,-rand)
+            
         self.edgeLoop(index,amplification_value)
         return error
         
@@ -220,7 +213,7 @@ net.createNetwork()
 net.calculateAmps()
 #vec1 = [0.9,0.1]
 while net.calculateAmps() > 0.1:
-    print(net.calculateAmps())
+    print("bezig")
     
 net.printEdges()
 print("\n\n\n")
