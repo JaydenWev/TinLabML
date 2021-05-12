@@ -189,16 +189,20 @@ class Network:
 
         for iEdge in range(18):
             self.addAmplificationOnIndex(iEdge,rand) # Opslaan van error gebeuren            
-            
+            current_error = 0  
             for iTrainingSetElement in range(4):
-                current_error = 0
+                
                 self.putSpecificMatrixInBeginNode(iTrainingSetElement)
                 if iTrainingSetElement in {0,1}:
                     shape = circle
                 else:
                     shape = cross
                 # ErrorArray[k] = self.calculateError(shape, x)
-                current_error += self.calculateError(shape, iTrainingSetElement)           
+                current_error += self.calculateError(shape, iTrainingSetElement)
+           # print ()
+          #  print('-+-',self.calculateError(shape, iTrainingSetElement))
+          #  print('-+-',current_error)
+          #  print()
             current_error /= 4 # Gemiddelde error over de 4 matrices
             errorArray[iEdge] = current_error
 
@@ -206,6 +210,7 @@ class Network:
      
         lowestErrorIndex = errorArray.index(min(errorArray))
         self.addAmplificationOnIndex(lowestErrorIndex, rand)
+        #print ('*', min(errorArray))
         return min(errorArray)
         
         #min(errorArray)
@@ -213,7 +218,9 @@ class Network:
     def calculateError (self, shape, iSetElement):
         vector = self.normalize(iSetElement)
         #print(vector[0],vector[1])
-        return mt.sqrt(mt.pow(shape[0]-vector[0],2) + mt.pow(shape[1]-vector[1],2))
+        a = mt.sqrt(mt.pow(shape[1]-vector[0],2) + mt.pow(shape[0]-vector[1],2))
+        #print(self.normalize(iSetElement), '---', a)
+        return a
         
 
         
@@ -239,9 +246,9 @@ print(net.normalize(3))
 
 
 
-testArray =np.array([[0, 0, 0],
-                    [0, 0, 0],
-                    [0, 0, 0]]).flatten()
+testArray =np.array([[1, 0, 1],
+                    [0, 1, 0],
+                    [0, 0, 1]]).flatten()
 
 print (net.normalize2(testArray))
 
