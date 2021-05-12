@@ -79,8 +79,8 @@ class NetworkNode(Node): # OutputNodes
     def getValue(self):
         temp = 0
         for inputEdge in self.inputEdges:
-            temp += self.sigmoid(inputEdge.getValue())
-        return temp
+            temp += inputEdge.getValue()
+        return self.sigmoid(temp)
 
 
 class Edge: # Edge
@@ -106,38 +106,38 @@ class Network:
         self.outputNodes = []
         self.nodesInOutputLayer = 2
         # self.netWorkNode = NetworkNode()
+        
     
     def createNetwork(self):
-        for x in range(self.nodesInOutputLayer): # Create output nodes
+        for iOutput in range(self.nodesInOutputLayer): # Create output nodes
             self.outputNodes.append(NetworkNode())
-        for x in range(len(trainingSets[0])): # Create input nodes
+            
+        for iInput in range(len(trainingSets[0])): # Create input nodes
             self.inputNodes.append(BeginNode())
-            for y in range(self.nodesInOutputLayer):
+            for iOutput in range(self.nodesInOutputLayer):
                 edge = Edge()
-                self.inputNodes[x].inputEdges.append(edge)
-                edge.inputNode = self.inputNodes[x]          # Set edges input
-                edge.outputNode = self.outputNodes[y]        # Set edges output
-                self.outputNodes[y].inputEdges.append(edge)  # Set edge as input for output node
+                self.inputNodes[iInput].outputEdges.append(edge)
+                edge.inputNode = self.inputNodes[iInput]          # Set edges input
+                edge.outputNode = self.outputNodes[iOutput]        # Set edges output
+                self.outputNodes[iOutput].inputEdges.append(edge)  # Set edge as input for output node
     
-    def putSpecificSetInBeginNode(self,index):
-        x = 0
-        for value in trainingSets[index]:
-            self.inputNodes[x].setValue(value)
-            x += 1
+    def putSpecificMatrixInBeginNode(self,index):
+        for iInput, value in enumerate (self.trainingSets[index]):
+            self.inputNodes[iInput].setValue(value)
 
     def putSpecificSetInBeginNodeUsingArray(self,array):
-        for x in range(9):
-            self.inputNodes[x].setValue(array[x])
+        for iInput, value in enumerate(array):
+            self.inputNodes[iInput].setValue(value)
     
     def getValueOutputNodes(self):
-        ValueOutputNodes = []
-        for x in range(self.nodesInOutputLayer):
-            ValueOutputNodes.append(self.outputNodes[x].getValue())
+        valueOutputNodes = []
+        for iOutput in range(self.nodesInOutputLayer):
+            valueOutputNodes.append(self.outputNodes[iOutput].getValue())
 
-        return ValueOutputNodes
+        return valueOutputNodes
         
     def normalize(self,index):
-        self.putSpecificSetInBeginNode(index)
+        self.putSpecificMatrixInBeginNode(index)
         vector = self.getValueOutputNodes()
         factor = mt.sqrt(mt.pow(vector[0],2) + mt.pow(vector[1],2)) # Sqaures the two values and take the sqrt from items
         # print("index",index)
@@ -161,20 +161,23 @@ class Network:
         # print(index)
         return vector # return the normalized vector
         
-    def setAmplificationOnIndex(self,amplifiedIndex, value):
-        x = 0
-        for outputNode in self.outputNodes:
-            for inputEdge in outputNode.inputEdges:
-                if amplifiedIndex == x:
-                    inputEdge.addAmplification(value)
+    def addAmplificationOnIndex(self,amplifiedIndex, value):
+        iEdge = 0
+        #for inputEdge in outputNode.inputEdges:
+         #   for outputNode in self.outputNodes:
+        for inputNode in self.inputNodes:
+            for outputEdge in inputNode.outputEdges:
+                if amplifiedIndex == iEdge:
+                    outputEdge.addAmplification(value)
+                    return
                     # print(inputEdge.amplification)
-                x += 1
+                iEdge += 1
     
     def printEdges(self):
         print("######\tBEGIN EDGES\t######")
-        for outputNode in self.outputNodes:
-            for inputEdge in outputNode.inputEdges:
-                    print(inputEdge.amplification)
+        for inputNode in self.inputNodes:
+            for outputEdge in inputNode.outputEdges:
+                    print(outputEdge.amplification)
         print("######\tEND EDGES\t######")
 
     
@@ -184,33 +187,40 @@ class Network:
 
         # print("Rand:",rand)
 
-        for k in range(18):
-            self.setAmplificationOnIndex(k,rand) # Opslaan van error gebeuren            
-            
-            for x in range(4):
-                current_error = 0
-                self.putSpecificSetInBeginNode(x)
-                if x == 0 or x == 1:
+        for iEdge in range(18):
+            self.addAmplificationOnIndex(iEdge,rand) # Opslaan van error gebeuren            
+            current_error = 0  
+            for iTrainingSetElement in range(4):
+                
+                self.putSpecificMatrixInBeginNode(iTrainingSetElement)
+                if iTrainingSetElement in {0,1}:
                     shape = circle
                 else:
                     shape = cross
                 # ErrorArray[k] = self.calculateError(shape, x)
-                current_error += self.calculateError(shape, x)           
+                current_error += self.calculateError(shape, iTrainingSetElement)
+           # print ()
+          #  print('-+-',self.calculateError(shape, iTrainingSetElement))
+          #  print('-+-',current_error)
+          #  print()
             current_error /= 4 # Gemiddelde error over de 4 matrices
-            errorArray[k] = current_error
+            errorArray[iEdge] = current_error
 
-            self.setAmplificationOnIndex(k,-rand) # Reset de amplification
+            self.addAmplificationOnIndex(iEdge,-rand) # Reset de amplification
      
         lowestErrorIndex = errorArray.index(min(errorArray))
-        self.setAmplificationOnIndex(lowestErrorIndex, rand)
-        return current_error
+        self.addAmplificationOnIndex(lowestErrorIndex, rand)
+        #print ('*', min(errorArray))
+        return min(errorArray)
         
+        #min(errorArray)
         
-        
-    def calculateError (self, shape, index):
-        vector = self.normalize(index)
+    def calculateError (self, shape, iSetElement):
+        vector = self.normalize(iSetElement)
         #print(vector[0],vector[1])
-        return mt.sqrt(mt.pow(shape[0]-vector[0],2) + mt.pow(shape[1]-vector[1],2))
+        a = mt.sqrt(mt.pow(shape[1]-vector[0],2) + mt.pow(shape[0]-vector[1],2))
+        #print(self.normalize(iSetElement), '---', a)
+        return a
         
 
         
@@ -220,7 +230,7 @@ net.createNetwork()
 #print(net.normalize(net.getValueOutputNodes(),3))
 
 #net.edgeLoop(3,0)
-net.calculateAmps()
+#net.calculateAmps()
 #vec1 = [0.9,0.1]
 while net.calculateAmps() > 0.01:
     pass
@@ -236,9 +246,9 @@ print(net.normalize(3))
 
 
 
-testArray =np.array([[0, 0, 0],
-                    [0, 0, 0],
-                    [0, 0, 0]]).flatten()
+testArray =np.array([[1, 0, 1],
+                    [0, 1, 0],
+                    [0, 0, 1]]).flatten()
 
 print (net.normalize2(testArray))
 
