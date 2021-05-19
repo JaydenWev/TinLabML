@@ -1,27 +1,37 @@
 '''
 Bob, Boyd, Jayden, Keanu
+
+This can be done by first creating inputnodes which represent the input values of a trainingSet. A neural network
+also requires output nodes which describe the output using either a zero, one or a combination.
+
 Prioritized requirements
-    Input is een 2d matrix
+    Input using 2d matrix
+    dependent on the matrix the output should look closely like the following vector: [0,1] for a circle and [1,0] for a cross
 
 Main design choices
+    • A function should never have more then one function stated in plain code
+      Therefore if a function needs to perform multiple tasks other functin should be nested within
+    • The network must be created before inserting a training/test-set
+    • All neural network functions should be in the appropriate class
+    • The different types of nodes should inherit their base functions from a base Node class
 
 
 Test specification
+    1. Insert a test set using the amplification result of the trainingSet.
+        Passed: The neural net recognises wich matrix is simular to a cross/shape
+        Fail: The neural net does not recognise corectly which matrix is a cross/shape
+    2. Insert a matrix that is close the trainingSet but not the same
+        Passed: The neural net still recognises wich matrix is simular to a cross/shape with a slight decrease in cofindence
+        Fail: The neural net does not recognise corectly which matrix is a cross/shape
+    3. Insert a matrix that consist of only a single one in the middle, surrounded by zero's
+        Passed: The neural net shows a low confidence 
+        Fail: The neural net still recognizes a shape even if its not close to the trainingSet
+Results:
 
-TO DO
-1. inputNodes pakken een waarde van de matric en gooien die door de sigmoid()
-2. waarde gaat door edge en wordt geamplified
-3. in netwerkNode gaat de waarde door de sigmoid
+       1. Passed
+       2. Passed
+       3. Passed
 
-de netwerkNodes die pakken de waarde van de inputNodes
-    in de edges worden de waardes gemultiplied met de amplification
-
-   Return value is een recusieve functie
-   Nodes overerven
-   
-   
-   circle = [0,1]
-   cross = [1,0]
    
 '''
 # Imports
@@ -57,7 +67,6 @@ class Node: # Base node
         self.outputEdges = []
 
     def sigmoid(self, x):
-        # print(1 / (1 + mt.exp(-x)))
         return  1 / (1 + mt.exp(-x))
 
 class BeginNode(Node): # InputNodes
@@ -79,8 +88,8 @@ class NetworkNode(Node): # OutputNodes
     def getValue(self):
         temp = 0
         for inputEdge in self.inputEdges:
-            temp += self.sigmoid(inputEdge.getValue())
-        return temp
+            temp += inputEdge.getValue()
+        return self.sigmoid(temp)
 
 
 class Edge: # Edge
@@ -105,76 +114,66 @@ class Network:
         self.inputNodes = []
         self.outputNodes = []
         self.nodesInOutputLayer = 2
-        # self.netWorkNode = NetworkNode()
+        
     
     def createNetwork(self):
-        for x in range(self.nodesInOutputLayer): # Create output nodes
+        for iOutput in range(self.nodesInOutputLayer): # Create output nodes
             self.outputNodes.append(NetworkNode())
-        for x in range(len(trainingSets[0])): # Create input nodes
+            
+        for iInput in range(len(trainingSets[0])): # Create input nodes
             self.inputNodes.append(BeginNode())
-            for y in range(self.nodesInOutputLayer):
+            for iOutput in range(self.nodesInOutputLayer):
                 edge = Edge()
-                self.inputNodes[x].inputEdges.append(edge)
-                edge.inputNode = self.inputNodes[x]          # Set edges input
-                edge.outputNode = self.outputNodes[y]        # Set edges output
-                self.outputNodes[y].inputEdges.append(edge)  # Set edge as input for output node
+                self.inputNodes[iInput].outputEdges.append(edge)
+                edge.inputNode = self.inputNodes[iInput]          # Set edges input
+                edge.outputNode = self.outputNodes[iOutput]        # Set edges output
+                self.outputNodes[iOutput].inputEdges.append(edge)  # Set edge as input for output node
     
-    def putSpecificSetInBeginNode(self,index):
-        x = 0
-        for value in trainingSets[index]:
-            self.inputNodes[x].setValue(value)
-            x += 1
+    def putSpecificMatrixInBeginNode(self,index):
+        for iInput, value in enumerate (self.trainingSets[index]):
+            self.inputNodes[iInput].setValue(value)
 
     def putSpecificSetInBeginNodeUsingArray(self,array):
-        for x in range(9):
-            self.inputNodes[x].setValue(array[x])
+        for iInput, value in enumerate(array):
+            self.inputNodes[iInput].setValue(value)
     
     def getValueOutputNodes(self):
-        ValueOutputNodes = []
-        for x in range(self.nodesInOutputLayer):
-            ValueOutputNodes.append(self.outputNodes[x].getValue())
+        valueOutputNodes = []
+        for iOutput in range(self.nodesInOutputLayer):
+            valueOutputNodes.append(self.outputNodes[iOutput].getValue())
 
-        return ValueOutputNodes
+        return valueOutputNodes
         
     def normalize(self,index):
-        self.putSpecificSetInBeginNode(index)
+        self.putSpecificMatrixInBeginNode(index)
         vector = self.getValueOutputNodes()
         factor = mt.sqrt(mt.pow(vector[0],2) + mt.pow(vector[1],2)) # Sqaures the two values and take the sqrt from items
-        # print("index",index)
-        # print("voor",vector)
         vector[0] /= factor # take the quotient to normalize the vector
         vector[1] /= factor
-
-        # print(vector)
-        # print(index)
         return vector # return the normalized vector
 
-    def normalize2(self,array):
+    def normalizeTestArray(self,array):
         self.putSpecificSetInBeginNodeUsingArray(array)
         vector = self.getValueOutputNodes()
         factor = mt.sqrt(mt.pow(vector[0],2) + mt.pow(vector[1],2)) # Sqaures the two values and take the sqrt from items
-        # print("index",index)
-        # print("voor",vector)
         vector[0] /= factor # take the quotient to normalize the vector
         vector[1] /= factor
-        # print(vector)
-        # print(index)
         return vector # return the normalized vector
         
-    def setAmplificationOnIndex(self,amplifiedIndex, value):
-        x = 0
-        for outputNode in self.outputNodes:
-            for inputEdge in outputNode.inputEdges:
-                if amplifiedIndex == x:
-                    inputEdge.addAmplification(value)
-                    # print(inputEdge.amplification)
-                x += 1
+    def addAmplificationOnIndex(self,amplifiedIndex, value):
+        iEdge = 0
+        for inputNode in self.inputNodes:
+            for outputEdge in inputNode.outputEdges:
+                if amplifiedIndex == iEdge:
+                    outputEdge.addAmplification(value)
+                    return
+                iEdge += 1
     
     def printEdges(self):
         print("######\tBEGIN EDGES\t######")
-        for outputNode in self.outputNodes:
-            for inputEdge in outputNode.inputEdges:
-                    print(inputEdge.amplification)
+        for inputNode in self.inputNodes:
+            for outputEdge in inputNode.outputEdges:
+                    print(outputEdge.amplification)
         print("######\tEND EDGES\t######")
 
     
@@ -182,68 +181,70 @@ class Network:
         rand = random.randint(-10,10)/10
         errorArray = [None]*18
 
-        # print("Rand:",rand)
 
-        for k in range(18):
-            self.setAmplificationOnIndex(k,rand) # Opslaan van error gebeuren            
-            
-            for x in range(4):
-                current_error = 0
-                self.putSpecificSetInBeginNode(x)
-                if x == 0 or x == 1:
+        for iEdge in range(18):
+            self.addAmplificationOnIndex(iEdge,rand) # Storing error value            
+            current_error = 0  
+            for iTrainingSetElement in range(4):
+                
+                self.putSpecificMatrixInBeginNode(iTrainingSetElement)
+                if iTrainingSetElement in {0,1}:
                     shape = circle
                 else:
                     shape = cross
-                # ErrorArray[k] = self.calculateError(shape, x)
-                current_error += self.calculateError(shape, x)           
-            current_error /= 4 # Gemiddelde error over de 4 matrices
-            errorArray[k] = current_error
+                current_error += self.calculateError(shape, iTrainingSetElement)
+            current_error /= 4 # Average error over 4 matrices
+            errorArray[iEdge] = current_error
 
-            self.setAmplificationOnIndex(k,-rand) # Reset de amplification
+            self.addAmplificationOnIndex(iEdge,-rand) # Reset the amplification
      
         lowestErrorIndex = errorArray.index(min(errorArray))
-        self.setAmplificationOnIndex(lowestErrorIndex, rand)
-        return current_error
+        self.addAmplificationOnIndex(lowestErrorIndex, rand)
+        return min(errorArray)
+
         
-        
-        
-    def calculateError (self, shape, index):
-        vector = self.normalize(index)
-        #print(vector[0],vector[1])
-        return mt.sqrt(mt.pow(shape[0]-vector[0],2) + mt.pow(shape[1]-vector[1],2))
+    def calculateError (self, shape, iSetElement):
+        vector = self.normalize(iSetElement)
+        a = mt.sqrt(mt.pow(shape[1]-vector[0],2) + mt.pow(shape[0]-vector[1],2))
+        return a
         
 
         
         
-net = Network(trainingSets)
-net.createNetwork()
-#print(net.normalize(net.getValueOutputNodes(),3))
+net = Network(trainingSets)     #making a netwerk using the trainingset
+net.createNetwork()         
 
-#net.edgeLoop(3,0)
-net.calculateAmps()
-#vec1 = [0.9,0.1]
 while net.calculateAmps() > 0.01:
     pass
     
-net.printEdges()
-print("\n\n\n")
+net.printEdges()    #prints amplifications of each edge
+print("\nTraining results:")
 
-print(net.normalize(0))
+print(net.normalize(0)) #prints the end result of the ouputnode
 print(net.normalize(1))
 print(net.normalize(2))
 print(net.normalize(3))
 
 
 
+print("\nTesting results:")
+testArray_1 =np.array([[1, 0, 1],
+                       [0, 1, 0],
+                       [0, 0, 1]]).flatten()
 
-testArray =np.array([[0, 0, 0],
-                    [0, 0, 0],
-                    [0, 0, 0]]).flatten()
+testArray_2 =np.array([[0, 0, 1],
+                       [0, 1, 0],
+                       [1, 0, 0]]).flatten()
 
-print (net.normalize2(testArray))
+testArray_3 =np.array([[1, 1, 1],
+                       [1, 0, 0],
+                       [0, 1, 1]]).flatten()
 
-#print(net.calculateError(vec1, cross))
+testArray_4 =np.array([[0, 1, 0],
+                       [0, 0, 1],
+                       [0, 1, 0]]).flatten()
 
-#print(random.randint(-10,10)/10)
-#input array moeten meerdere arrays worden zodat het een hele trainingset wordt
-#print (trainingSet.flatten())
+print (net.normalizeTestArray(testArray_1))
+print (net.normalizeTestArray(testArray_2))
+print (net.normalizeTestArray(testArray_3))
+print (net.normalizeTestArray(testArray_4))
