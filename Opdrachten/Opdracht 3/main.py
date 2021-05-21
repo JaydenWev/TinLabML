@@ -1,8 +1,19 @@
 '''
 
 '''
-import sys
-sys.path.append('D:\Documents\School\Tinlab\Tinlab ML\TinLabML\Opdrachten\Opdracht 3\music')
+import muser.py as ms
 
-import music.muser.py as ms
 print("works")
+
+class Block: # Basic buildingBlock
+    pass
+
+class Generation:
+    genID = 0
+
+class MusicGenerator:
+    pass
+
+class SaveToFile:
+    pass
+
