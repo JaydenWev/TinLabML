@@ -1,7 +1,7 @@
 import csv
 
 def writeToFile(path, data):
-    f = open(path, 'w')
+    f = open(path, 'w+')
     for block in data:
         for t in block:
             line = '-'.join(str(x) for x in t)
