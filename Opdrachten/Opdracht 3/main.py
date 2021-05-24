@@ -3,8 +3,8 @@ import fileInteractor as fi
 # ¿¿Optie voor afspeelsnelheid/BPM erbij zetten??
 
 #where the music is stored
-pathToCsv = 'Opdrachten/Opdracht 3/csv/data.csv'
-pathToMusic = 'Opdrachten/Opdracht 3/music/song.wav'
+csvDir = 'Opdrachten/Opdracht 3/csv/'
+songDir = 'Opdrachten/Opdracht 3/music/'
 
 smallBlock = (
     (
@@ -13,12 +13,12 @@ smallBlock = (
     (
         ('e', 4), ('f#', 4),
     )
-),
+)
 
+csvName = 'data.csv'
+fi.writeToFile(csvDir+csvName, smallBlock)
+# data = fi.readFromFile(csvDir)
 
-fi.writeToFile(pathToFile, smallBlock)
-data = fi.readFromFile(pathToFile)
-
-print(data[0][0])
-print('\n')
-print(data)
+muser = ms.Muser()
+songName = 'song.wav'
+muser.generate(smallBlock, songDir+songName)
