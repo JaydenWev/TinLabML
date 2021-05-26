@@ -11,7 +11,7 @@ class Muser:
                 transpose = 1,
                 pause = 0.1,
                 boost = 1.15,
-                repeat = 1,
+                repeat = 0,
                 fn = self.getTrackFileName (trackIndex),
             )
 
