@@ -12,7 +12,7 @@ smallBlock = [
     ],
     [
         ('e', 4), ('f#', 4),
-    ]
+    ],
 ]
 
 # Save to file
@@ -21,10 +21,42 @@ fi.writeToFile(csvDir+csvName, smallBlock)
 # read from file
 data = fi.readFromFile(csvDir+csvName)
 
-
 muser = ms.Muser()
 # Save music file to location
 songName = 'song.wav'
 muser.generate(data, songDir+songName)
 
+
+class SongCreater:    
+    def assembleSongList(self): # 8 blokken verzamelen in een lijst 
+        pass
+
+    def createSong(self, blocks): # Creates the music
+        pass
+
+class UserInputHandeler:
+    score = 0
+
+    def getUserInput(self):
+        pass
+
+    def getScore(self):
+        return self.score
+
+class BlockPicker:
+    baseBlocks = []
+    
+    def readBaseBlocks(self): # Read the base/starter blocks
+        pass
+
+    def selectBlocksToUse(self): # Selects which block wil be build
+        pass # return func
+    
+
+
+
+
+
+sc = SongCreater()
+user = UserInputHandeler()
 
