@@ -1,20 +1,18 @@
-# Jayden
-import numpy as np
-from csv import writer as wr
+import csv
 
-class fileInteractor:
-    def storeInFile(self, fileName, values):
-        np.savetxt(fileName, values, delimiter=",")
+def writeToFile(path, data):
+    f = open(path, 'w+')
+    for t in data:
+        line = '-'.join(str(x) for x in t)
+        f.write(line + '\n')
+    f.close()
 
-    def storeNewElement(self, fileName, element):
-        # Open file in append mode
-        with open(fileName, 'a+', newline='') as write_obj:
-            csv_writer = wr(write_obj) # Create a writer object from csv module
-            csv_writer.writerow(element)
-            write_obj.close()
-
-    def readFromFile(self, fileName):
-        return np.genfromtxt(fileName, delimiter=',')
-
-    def readFromFile(self, fileName):
-        return np.genfromtxt(fileName, delimiter=',')
+def readFromFile(path):
+    dataFile = open(path, 'r')
+    dataReader = csv.reader(dataFile, delimiter = '-')
+    data = [[],[]]
+    for rowID, row in enumerate(dataReader):
+        for value in row:
+            newVal = eval(value)
+            data[rowID].append(newVal)
+    return data

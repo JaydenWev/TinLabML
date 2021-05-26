@@ -3,7 +3,7 @@ import os
 import tomita.legacy.pysynth as ps
 
 class Muser:
-    def generate (self, song):
+    def generate (self, song, path):
         for trackIndex, track in enumerate (song):
             ps.make_wav (
                 track,
@@ -17,7 +17,7 @@ class Muser:
 
         ps.mix_files (
             *[self.getTrackFileName (trackIndex) for trackIndex in range (len (song))],
-            'song.wav'
+            path
         )
 
         for fileName in gl.glob ('track_*.wav'):
