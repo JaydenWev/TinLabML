@@ -45,8 +45,8 @@ class SongCreater:
 class UserInputHandeler:
     score = 0
 
-    def getUserInput(self):
-        pass
+    def getUserInput(self): # gets the user opinion 
+        pass # returns a list of 0/1
 
     def getScore(self):
         return self.score
