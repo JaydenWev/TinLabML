@@ -6,12 +6,20 @@ import fileInteractor as fi
 csvDir = 'Opdrachten/Opdracht 3/csv/'
 songDir = 'Opdrachten/Opdracht 3/music/'
 
-smallBlock = [
+firstBlock = [
     [
         ('e', 8), ('f#', 8),
     ],
     [
         ('e', 4), ('f#', 4),
+    ],
+]
+secondBlock = [
+    [
+        ('c', 8), ('b', 8),
+    ],
+    [
+        ('e', 4), ('d', 4),
     ],
 ]
 
@@ -43,16 +51,18 @@ class UserInputHandeler:
     def getScore(self):
         return self.score
 
-class BlockPicker:
+class BlockController:
     baseBlocks = []
+    currentBlocks = []
     
     def readBaseBlocks(self): # Read the base/starter blocks
         pass
 
-    def selectBlocksToUse(self): # Selects which block wil be build
+    def selectBlocksToUse(self): # Selects which block will be build
         pass # return func
     
-
+    def updateBlockScore(self, adjustment): # Updates the score of currently used blocks
+        pass
 
 
 
