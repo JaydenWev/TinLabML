@@ -8,18 +8,30 @@ songDir = 'Opdrachten/Opdracht 3/music/'
 
 firstBlock = [
     [
-        ('e', 8), ('f#', 8),
+        ('f', 4),
+        ('g', 4),
+        ('f', 4),
+        ('g', 4), 
     ],
     [
-        ('e', 4), ('f#', 4),
+        ('a', 16),('b', 16),('c', 16),('d', 16),
+        ('a', 16),('b', 16),('c', 16),('d', 16),
+        ('a', 16),('b', 16),('c', 16),('d', 16),
+        ('a', 16),('b', 16),('c', 16),('d', 16),
     ],
 ]
 secondBlock = [
     [
-        ('c', 8), ('b', 8),
+        ('e', 4),
+        ('d', 4),
+        ('b', 4),
+        ('a', 4),  
     ],
     [
-        ('e', 4), ('d', 4),
+        ('c2', 16),('c2', 16),('c2', 16),('c2', 16),
+        ('c2', 12),('c2', 12),('c2', 12),
+        ('c2', 8),('c2', 8),
+        ('c2', 4),
     ],
 ]
 '''
@@ -40,7 +52,8 @@ class SongCreater:
     def assembleSongList(self): # 8 blokken verzamelen in een lijst 
         pass
 
-    def createSong(self, blocks): # Creates the music
+    def generateSong(self, blocks,name): # Creates the music
+        muser.generate (blocks,"music\\"+ name)
         pass
 
 class UserInputHandeler:
@@ -68,8 +81,10 @@ class UserInputHandeler:
 
 class BlockController:
     baseBlocks = []
-    currentBlocks = []
-    
+    currentBlocks = [[],[]]
+    def setCurrentBlock(self, blockToSet):
+        self.currentBlocks = blockToSet
+        #print("current: ",self.currentBlocks)
     def readBaseBlocks(self): # Read the base/starter blocks
         pass
 
@@ -78,15 +93,26 @@ class BlockController:
     
     def updateBlockScore(self, adjustment): # Updates the score of currently used blocks
         pass
-
-
-
+    
+    def addBlockToSong (self, returnedBlock):
+        for x, row in enumerate(returnedBlock):
+            for y, column in enumerate(returnedBlock[x]):
+                self.currentBlocks[x].append(returnedBlock[x][y])
+        #print ("current after adding:",self.currentBlocks)
 
 
 sc = SongCreater()
 user = UserInputHandeler()
+bc = BlockController()
+muser = ms.Muser ()
 
-print(user.getUserInput())
-print(user.getUserInput())
+
+bc.setCurrentBlock(firstBlock) #overwrites current block with parameter
+bc.addBlockToSong(secondBlock) #adds block to current block located in bc
+sc.generateSong(bc.currentBlocks,"song1.wav")
+
+
+
+
 print(user.getUserInput())
 
