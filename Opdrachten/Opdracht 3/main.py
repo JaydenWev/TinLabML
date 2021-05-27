@@ -6,7 +6,7 @@ import fileInteractor as fi
 csvDir = 'Opdrachten/Opdracht 3/csv/'
 songDir = 'Opdrachten/Opdracht 3/music/'
 
-smallBlock = [
+firstBlock = [
     [
         ('e', 8), ('f#', 8),
     ],
@@ -14,7 +14,15 @@ smallBlock = [
         ('e', 4), ('f#', 4),
     ],
 ]
-
+secondBlock = [
+    [
+        ('c', 8), ('b', 8),
+    ],
+    [
+        ('e', 4), ('d', 4),
+    ],
+]
+'''
 # Save to file
 csvName = 'data.csv'
 fi.writeToFile(csvDir+csvName, smallBlock)
@@ -25,6 +33,7 @@ muser = ms.Muser()
 # Save music file to location
 songName = 'song.wav'
 muser.generate(data, songDir+songName)
+'''
 
 
 class SongCreater:    
@@ -36,22 +45,39 @@ class SongCreater:
 
 class UserInputHandeler:
     score = 0
+    ratingMelodies = []
+    def getUserInput(self): # gets the user opinion 
+        self.ratingMelodies = []
+        for iMelodie in range(10):
+            self.ratingMelodies.append(self.ratingMelodieNumber(iMelodie))
+        return self.ratingMelodies
+             
+    def ratingMelodieNumber(self, iMelodie):
+        while True :
+            rate = input("What rate do you give melodie" + str(iMelodie) + ". choose: good/bad\n")
+            if rate == "good":
+                return 1
+            if rate == "bad" :
+                return -1
+            print('Answer needs to be "good" or "bad"')
 
-    def getUserInput(self):
-        pass
+        
 
     def getScore(self):
         return self.score
 
-class BlockPicker:
+class BlockController:
     baseBlocks = []
+    currentBlocks = []
     
     def readBaseBlocks(self): # Read the base/starter blocks
         pass
 
-    def selectBlocksToUse(self): # Selects which block wil be build
+    def selectBlocksToUse(self): # Selects which block will be build
         pass # return func
     
+    def updateBlockScore(self, adjustment): # Updates the score of currently used blocks
+        pass
 
 
 
@@ -59,4 +85,8 @@ class BlockPicker:
 
 sc = SongCreater()
 user = UserInputHandeler()
+
+print(user.getUserInput())
+print(user.getUserInput())
+print(user.getUserInput())
 
