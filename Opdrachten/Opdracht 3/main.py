@@ -1,7 +1,6 @@
 import muser as ms
 import numpy as np
 import musicBlocks as mbLib
-import random
 # ¿¿Optie voor afspeelsnelheid/BPM erbij zetten??
 
 #where the music is stored
@@ -32,11 +31,10 @@ class SongCreater:
         pass
 
 class UserInputHandeler:
-    score = 0
     ratingMelodies = []
-    def getUserInput(self): # gets the user opinion 
+    def getUserInput(self,amountOfMelodies): # gets the user opinion 
         self.ratingMelodies = []
-        for iMelodie in range(10):
+        for iMelodie in range(amountOfMelodies):
             self.ratingMelodies.append(self.ratingMelodieNumber(iMelodie))
         return self.ratingMelodies
              
@@ -48,29 +46,31 @@ class UserInputHandeler:
             if rate == "bad" :
                 return -1
             print('Answer needs to be "good" or "bad"')
-
+    
+    def changeScore(self, melodies):
         
-
-    def getScore(self):
-        return self.score
+        score = self.getUserInput(len(melodies))
+        newScore = []
+        for Imelodie, melodie in enumerate(melodies):
+            melodie = [x + score[Imelodie] for x in melodie]
+            newScore.append(melodie)
+        
+        return newScore
+            
+        
+   
+    def getRating(self):
+        return self.ratingMelodies
 
 class BlockController:
-    songBlockLength = 0
     baseBlocks = []
-    currentBlocks = [[],[]] # Music block for current song
-    currentblockIDs = []    # ID of music blocks in currentBlocks
+    currentBlocks = [[],[]]
+    blockIDs = []
     blockScores = [12, 9, 7, 11, 6, 12, 12, 8, 7, 14, 13, 10, 12, 8, 11, 10, 13, 10, 11, 9, 12, 10, 11, 8, 14]
-    
-    def __init__(self, songLength):
-        self.songBlockLength = songLength
+    def readBaseBlocks(self): # Read the base/starter blocks
+        pass
 
     def selectBlocksToUse(self): # Selects which block will be build
-        availableIndex = self.getTopScores(10)
-        # 8 keer herhaald worden
-        for x in range(self.songBlockLength):
-            indexNumber = random.randint(0,len(availableIndex)-1)
-            # print(indexNumber)
-            self.addBlockToSong(indexNumber)
         pass # return func
     
     def updateBlockScore(self, adjustment): # Updates the score of currently used blocks
@@ -81,24 +81,51 @@ class BlockController:
             for y, column in enumerate(mbLib.blocks[blockID][x]):
                 self.currentBlocks[x].append(mbLib.blocks[blockID][x][y])
         #print ("current after adding:",self.currentBlocks)
-    
-    def checkIfEqual(self, oldSong):
-        if oldSong == self.currentBlocks:
-            return 1
-        else:
-            return -1
-            
-    def getTopScores(self, amount):
-        print ('\nmax Values')
-        indices = np.argpartition(self.blockScores, -amount)[-amount:]
-        # print("index van hoogste : ", amount, " ", indices)
-        return indices
 
 
 sc = SongCreater()
 user = UserInputHandeler()
-bc = BlockController(8) # Pass through amount of blocks in a song
+bc = BlockController()
 muser = ms.Muser ()
+print(mbLib.blocks[0][0])
 
-bc.selectBlocksToUse()
-print(bc.currentBlocks)
+array = [   [1,2,3,4,5,6,7,8],
+            [8,7,6,5,4,3,2,1],
+            [0,1,2,3,4,5,6,7],
+            [7,6,5,4,3,2,1,0],
+            [5,5,5,5,5,5,5,5],
+            [4,4,4,4,4,4,4,4],
+            [2,2,2,3,3,3,4,4],
+            [0,0,0,1,1,1,2,2],
+            [1,1,3,3,5,5,7,7],
+            [0,0,0,0,0,0,0,0]  
+        ]
+
+for x in range(10):
+    print(array[x])
+    
+newArray = user.changeScore(array)
+
+for x in range(10):
+    print(newArray[x])
+    
+
+
+arr = bc.blockScores
+n = 4
+ind = np.argpartition(arr, -n)[-n:]
+print("index van hoogste : ", n, " ", ind)
+
+
+bc.addBlockToSong(2) # Adds block to current block located in bc
+bc.addBlockToSong(1)
+bc.addBlockToSong(0)
+sc.generateSong(bc.currentBlocks,"song1.wav")
+print("currentBlocks:\n", bc.currentBlocks)
+
+max_val = max(bc.blockScores)
+index_max = bc.blockScores.index(max_val)
+
+print('max val: ', max_val)
+print(index_max)
+
