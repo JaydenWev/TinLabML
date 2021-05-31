@@ -1,11 +1,13 @@
 import muser as ms
 import numpy as np
 import musicBlocks as mbLib
+import random
+import FileInteractorJSON as fi
 # ¿¿Optie voor afspeelsnelheid/BPM erbij zetten??
 
 #where the music is stored
-csvDir = 'Opdrachten/Opdracht 3/csv/'
-songDir = 'Opdrachten/Opdracht 3/music/'
+jsonDir = 'data/data.json'
+songDir = 'music/'
 
 
 '''
@@ -26,9 +28,10 @@ class SongCreater:
     def assembleSongList(self): # 8 blokken verzamelen in een lijst 
         pass
 
-    def generateSong(self, blocks,name): # Creates the music
-        muser.generate (blocks,"music\\"+ name)
-        pass
+    def generateSong(self, blocks, name): # Creates the music
+        path = songDir+name
+        muser.generate (blocks, path)
+        print('File saved to: ', path)
 
 class UserInputHandeler:
     ratingMelodies = []
@@ -48,7 +51,6 @@ class UserInputHandeler:
             print('Answer needs to be "good" or "bad"')
     
     def changeScore(self, melodies):
-        
         score = self.getUserInput(len(melodies))
         newScore = []
         for Imelodie, melodie in enumerate(melodies):
@@ -64,31 +66,53 @@ class UserInputHandeler:
 
 class BlockController:
     baseBlocks = []
-    currentBlocks = [[],[]]
-    blockIDs = []
-    blockScores = [12, 9, 7, 11, 6, 12, 12, 8, 7, 14, 13, 10, 12, 8, 11, 10, 13, 10, 11, 9, 12, 10, 11, 8, 14]
-    def readBaseBlocks(self): # Read the base/starter blocks
-        pass
+    currentBlocks = [[],[]] # Music block for current song
+    currentblockIDs = []    # ID of music blocks in currentBlocks
+    blockScores = []
+
+    def __init__(self, length):
+        self.songBlockLength = length
+        self.readScores(jsonDir)
 
     def selectBlocksToUse(self): # Selects which block will be build
-        pass # return func
+        availableIndex = self.getTopScores(10)
+        # 8 keer herhaald worden
+        for x in range(self.songBlockLength):
+            indexNumber = random.randint(0,len(availableIndex)-1)
+            # print(indexNumber)
+            self.addBlockToSong(indexNumber)
     
     def updateBlockScore(self, adjustment): # Updates the score of currently used blocks
         pass
     
     def addBlockToSong (self, blockID):
-        for x, row in enumerate(mbLib.blocks[blockID]):
-            for y, column in enumerate(mbLib.blocks[blockID][x]):
-                self.currentBlocks[x].append(mbLib.blocks[blockID][x][y])
+        for rowIndex, row in enumerate(mbLib.blocks[blockID]):
+            for columnIndex, column in enumerate(mbLib.blocks[blockID][rowIndex]):
+                self.currentBlocks[rowIndex].append(mbLib.blocks[blockID][rowIndex][columnIndex])
         #print ("current after adding:",self.currentBlocks)
+    
+    def checkIfEqual(self, oldSong):
+        if oldSong == self.currentBlocks:
+            return 1
+        else:
+            return -1
+            
+    def getTopScores(self, amount):
+        print ('\nmax Values')
+        indices = np.argpartition(self.blockScores, -amount)[-amount:]
+        # print("index van hoogste : ", amount, " ", indices)
+        return indices
+    
+    def readScores(self, path):
+        self.blockScores = fi.readFromFile(path)
 
 
 sc = SongCreater()
 user = UserInputHandeler()
-bc = BlockController()
+bc = BlockController(8)
 muser = ms.Muser ()
-print(mbLib.blocks[0][0])
 
+# check how to update the scores
 array = [   [1,2,3,4,5,6,7,8],
             [8,7,6,5,4,3,2,1],
             [0,1,2,3,4,5,6,7],
@@ -108,24 +132,7 @@ newArray = user.changeScore(array)
 
 for x in range(10):
     print(newArray[x])
-    
 
-
-arr = bc.blockScores
-n = 4
-ind = np.argpartition(arr, -n)[-n:]
-print("index van hoogste : ", n, " ", ind)
-
-
-bc.addBlockToSong(2) # Adds block to current block located in bc
-bc.addBlockToSong(1)
-bc.addBlockToSong(0)
-sc.generateSong(bc.currentBlocks,"song1.wav")
-print("currentBlocks:\n", bc.currentBlocks)
-
-max_val = max(bc.blockScores)
-index_max = bc.blockScores.index(max_val)
-
-print('max val: ', max_val)
-print(index_max)
-
+# Create randomized song
+bc.selectBlocksToUse()
+sc.generateSong(bc.currentBlocks, 'test.wav')
