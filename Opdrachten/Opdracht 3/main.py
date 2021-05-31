@@ -57,6 +57,7 @@ class BlockController:
     baseBlocks = []
     currentBlocks = [[],[]]
     blockIDs = []
+    blockScores = [12, 9, 7, 11, 6, 12, 12, 8, 7, 14, 13, 10, 12, 8, 11, 10, 13, 10, 11, 9, 12, 10, 11, 8, 14]
     def readBaseBlocks(self): # Read the base/starter blocks
         pass
 
@@ -69,9 +70,7 @@ class BlockController:
     def addBlockToSong (self, blockID):
         for x, row in enumerate(mbLib.blocks[blockID]):
             for y, column in enumerate(mbLib.blocks[blockID][x]):
-                print("pre append")
                 self.currentBlocks[x].append(mbLib.blocks[blockID][x][y])
-                print("post append")
         #print ("current after adding:",self.currentBlocks)
 
 
@@ -83,14 +82,15 @@ print(mbLib.blocks[0][0])
 
 
 
-#bc.setCurrentBlock(mbLib.blocks[0]) #overwrites current block with parameter
-bc.addBlockToSong(2) #adds block to current block located in bc
+bc.addBlockToSong(2) # Adds block to current block located in bc
 bc.addBlockToSong(1)
 bc.addBlockToSong(0)
 sc.generateSong(bc.currentBlocks,"song1.wav")
-print("currentBlocks: ", bc.currentBlocks)
+print("currentBlocks:\n", bc.currentBlocks)
 
+max_val = max(bc.blockScores)
+index_max = bc.blockScores.index(max_val)
 
-
-print(user.getUserInput())
+print('max val: ', max_val)
+print(index_max)
 
