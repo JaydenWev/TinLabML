@@ -34,29 +34,27 @@ class SongCreater:
         print('File saved to: ', path)
 
 class UserInputHandeler:
-    ratingMelodies = []
-    def getUserInput(self,amountOfMelodies): # gets the user opinion 
-        self.ratingMelodies = []
-        for iMelodie in range(amountOfMelodies):
-            self.ratingMelodies.append(self.ratingMelodieNumber(iMelodie))
-        return self.ratingMelodies
+
+    def changeScore(self,melodiesPosition): # gets the user opinion 
+        melodiesScore = fi.readFromFile(jsonDir)
+        for iMelodie in range(len(melodiesPosition)):
+             score = self.getUserInput(iMelodie)
+             for block in melodiesPosition[iMelodie]:
+                melodiesScore[block] += score 
+                
+        fi.writeToFile(jsonDir, melodiesScore)
+        return melodiesScore
+  
              
-    def ratingMelodieNumber(self, iMelodie):
+    def getUserInput(self, iMelodie):
         while True :
             rate = int(input("What rate do you give melodie" + str(iMelodie) + ". choose: between 0-10\n"))
             if rate <= 10 and rate >= 0:
                 return rate-5
             print('Answer needs to be between 0-10')
-    
-    def changeScore(self, melodies):
-        score = self.getUserInput(len(melodies))
-        newScore = []
-        for Imelodie, melodie in enumerate(melodies):
-            melodie = [x + score[Imelodie] for x in melodie]
-            newScore.append(melodie)
+           
         
-        return newScore
-            
+        
         
    
     def getRating(self):
@@ -112,24 +110,17 @@ muser = ms.Muser ()
 
 # check how to update the scores
 array = [   [1,2,3,4,5,6,7,8],
-            [8,7,6,5,4,3,2,1],
-            [0,1,2,3,4,5,6,7],
-            [7,6,5,4,3,2,1,0],
-            [5,5,5,5,5,5,5,5],
-            [4,4,4,4,4,4,4,4],
-            [2,2,2,3,3,3,4,4],
-            [0,0,0,1,1,1,2,2],
-            [1,1,3,3,5,5,7,7],
-            [0,0,0,0,0,0,0,0]  
+            [2,2,2,2,2,2,2,2],
+
         ]
 
-for x in range(10):
+for x in range(2):
     print(array[x])
     
-newArray = user.changeScore(array)
+    
+print(user.changeScore(array))
 
-for x in range(10):
-    print(newArray[x])
+
 
 # Create randomized song
 bc.selectBlocksToUse()
