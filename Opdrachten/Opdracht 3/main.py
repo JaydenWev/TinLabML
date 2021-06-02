@@ -55,9 +55,6 @@ class UserInputHandeler:
         return self.ratingMelodies
 
 class BlockController: # Decides which block are placed in  the song
-    
-    
-
     def __init__(self, length, id):
         self.songBlockLength = length
         self.readScores(jsonDir)
@@ -127,45 +124,17 @@ blockGeneration.append(BlockController(8, 8))
 blockGeneration.append(BlockController(8, 9))
 blockGeneration.append(BlockController(8, 10))
 
-def testUserInput():
-    # check how to update the scores
-    array = [   [1,2,3,4,5,6,7,8],
-                [8,7,6,5,4,3,2,1],
-                [0,1,2,3,4,5,6,7],
-                [7,6,5,4,3,2,1,0],
-                [5,5,5,5,5,5,5,5],
-                [4,4,4,4,4,4,4,4],
-                [2,2,2,3,3,3,4,4],
-                [0,0,0,1,1,1,2,2],
-                [1,1,3,3,5,5,7,7],
-                [0,0,0,0,0,0,0,0]  
-            ]
+generationBlockIDs = []
 
-    for x in range(10):
-        print(array[x])
+def generateSong():
+    for controllerID, blockController in enumerate(blockGeneration):
+        blockController.readScores(jsonDir)
+        blockController.selectBlocksToUse()
+        print(blockController.currentblockIDs)
+        generationBlockIDs.append(blockController.currentblockIDs)
         
-    newArray = user.changeScore(array)
-
-# check how to update the scores
-array = [   [1,2,3,4,5,6,7,8],
-            [2,2,2,2,2,2,2,2],
-
-        ]
-
-for x in range(2):
-    print(array[x])
+        sc.generateSong(blockController.currentBlocks, 'song_'+str(controllerID)+'.wav')
     
-    
-print(user.changeScore(array))
-
-
-
-# Create randomized song
-# sc.generateSong(bc.currentBlocks, 'test.wav')
-print('blockGeneration: '+str(len(blockGeneration)))
-for controllerID, blockController in enumerate(blockGeneration):
-    blockController.readScores(jsonDir)
-    blockController.selectBlocksToUse()
-    
-    sc.generateSong(blockController.currentBlocks, 'song_'+str(controllerID)+'.wav')
-    
+generateSong()
+# print(generationBlockIDs)
+user.changeScore(generationBlockIDs)
