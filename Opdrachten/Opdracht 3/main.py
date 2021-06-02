@@ -40,12 +40,10 @@ class UserInputHandeler:
              
     def ratingMelodieNumber(self, iMelodie):
         while True :
-            rate = input("What rate do you give melodie" + str(iMelodie) + ". choose: good/bad\n")
-            if rate == "good":
-                return 1
-            if rate == "bad" :
-                return -1
-            print('Answer needs to be "good" or "bad"')
+            rate = int(input("What rate do you give melodie" + str(iMelodie) + ". choose: between 0-10\n"))
+            if rate <= 10 and rate >= 0:
+                return rate-5
+            print('Answer needs to be between 0-10')
     
     def changeScore(self, melodies):
         
