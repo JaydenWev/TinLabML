@@ -43,7 +43,6 @@ class UserInputHandeler:
                 melodiesScore[block] += score 
                 
         fi.writeToFile(jsonDir, melodiesScore)
-        return melodiesScore
   
              
     def getUserInput(self, iMelodie):
@@ -53,10 +52,6 @@ class UserInputHandeler:
                 return rate-5
             print('Answer needs to be between 0-10')
            
-        
-        
-        
-   
     def getRating(self):
         return self.ratingMelodies
 
