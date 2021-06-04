@@ -22,7 +22,6 @@ songName = 'song.wav'
 muser.generate(data, songDir+songName)
 '''
 
-
 class SongCreater:    
     def assembleSongList(self): # 8 blokken verzamelen in een lijst 
         pass
@@ -56,6 +55,7 @@ class UserInputHandeler:
 
 class BlockController: # Decides which block are placed in  the song
     def __init__(self, length, id):
+
         self.songBlockLength = length
         self.readScores(jsonDir)
         self.id = id
@@ -67,8 +67,8 @@ class BlockController: # Decides which block are placed in  the song
     def selectBlocksToUse(self): # Selects which block will be build
         availableIndex = self.getTopScores(10) # Get 10 highest scores
         # 8 keer herhaald worden
-        for x in range(self.songBlockLength):
-            indexNumber = random.randint(0,len(availableIndex)-1)
+        for counter in range(self.songBlockLength):
+            indexNumber = availableIndex[random.randint(0,len(availableIndex)-1)] # Random number under availableIndex
             # print(indexNumber)
             self.addBlockToSong(indexNumber)
     
@@ -100,7 +100,6 @@ class BlockController: # Decides which block are placed in  the song
     def printScores(self):
         print(self.blockScores)
 
-
 sc = SongCreater()
 user = UserInputHandeler()
 bc = BlockController(8, 99)
@@ -126,6 +125,7 @@ blockGeneration.append(BlockController(8, 10))
 
 generationBlockIDs = []
 
+# Run the code to generate the songs
 def generateSong():
     for controllerID, blockController in enumerate(blockGeneration):
         blockController.readScores(jsonDir)
@@ -136,5 +136,4 @@ def generateSong():
         sc.generateSong(blockController.currentBlocks, 'song_'+str(controllerID)+'.wav')
     
 generateSong()
-# print(generationBlockIDs)
 user.changeScore(generationBlockIDs)
