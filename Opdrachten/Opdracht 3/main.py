@@ -1,3 +1,4 @@
+'''Boyd Jayden Keanu'''
 import muser as ms
 import numpy as np
 import musicBlocks as mbLib
@@ -130,7 +131,7 @@ def generateSong():
     for controllerID, blockController in enumerate(blockGeneration):
         blockController.readScores(jsonDir)
         blockController.selectBlocksToUse()
-        print(blockController.currentblockIDs)
+        
         generationBlockIDs.append(blockController.currentblockIDs)
         
         sc.generateSong(blockController.currentBlocks, 'song_'+str(controllerID)+'.wav')
