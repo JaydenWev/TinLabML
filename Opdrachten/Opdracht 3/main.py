@@ -1,4 +1,22 @@
-'''Boyd Jayden Keanu'''
+''' Boyd Jayden Keanu
+
+Prioritized requirements
+    Seperate file with the music blocks.
+    Each music block as a score
+    User must be able to listen to all songs before grading
+
+Main design choices
+    All song should be created by one class/object
+    Each created sequence of music block should be created in there own object
+Test specification
+    1.  After the grades are given it shoulld have effect on the scores
+    Passed: The scores change accordingly yo the given grades
+    Fail: The scores don't change
+    2.  Create new set of 10 songs
+    Passed: The new songs are created and the old files overwritten
+    Fail: The new songs are created and saved with a copy indication in their name
+
+'''
 import muser as ms
 import numpy as np
 import musicBlocks as mbLib
@@ -10,30 +28,13 @@ import FileInteractorJSON as fi
 jsonDir = 'data/data.json'
 songDir = 'music/'
 
-'''
-# Save to file
-csvName = 'data.csv'
-fi.writeToFile(csvDir+csvName, smallBlock)
-# read from file
-data = fi.readFromFile(csvDir+csvName)
-
-muser = ms.Muser()
-# Save music file to location
-songName = 'song.wav'
-muser.generate(data, songDir+songName)
-'''
-
-class SongCreater:    
-    def assembleSongList(self): # 8 blokken verzamelen in een lijst 
-        pass
-
+class SongCreater:
     def generateSong(self, blocks, name): # Creates the music
         path = songDir+name
         muser.generate (blocks, path)
         print('File saved to: ', path)
 
 class UserInputHandeler:
-
     def changeScore(self,melodiesPosition): # gets the user opinion 
         melodiesScore = fi.readFromFile(jsonDir)
         for iMelodie in range(len(melodiesPosition)):
@@ -79,12 +80,6 @@ class BlockController: # Decides which block are placed in  the song
                 self.currentBlocks[rowIndex].append(mbLib.blocks[blockID][rowIndex][columnIndex])
         self.currentblockIDs.append(blockID)
         # print ("current after adding:",self.currentBlocks)
-    
-    def checkIfEqual(self, oldSong):
-        if oldSong == self.currentBlocks:
-            return 1
-        else:
-            return -1
             
     def getTopScores(self, amount):
         indices = np.argpartition(self.blockScores, -amount)[-amount:]
@@ -105,12 +100,6 @@ sc = SongCreater()
 user = UserInputHandeler()
 bc = BlockController(8, 99)
 muser = ms.Muser ()
-bc_1 = BlockController(8, 1)
-bc_2 = BlockController(8, 2)
-bc_3 = BlockController(8, 3)
-bc_4 = BlockController(8, 4)
-bc_5 = BlockController(8, 5)
-bc_6 = BlockController(8, 6)
 
 blockGeneration = []
 blockGeneration.append(BlockController(8, 1))
