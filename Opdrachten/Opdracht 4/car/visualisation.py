@@ -174,7 +174,7 @@ class Visualisation (sp.Scene):
         )
         '''
         self.camera (   # Soccer match
-            position = sp.tEva ((sp.world.physics.positionX + 2, sp.world.physics.positionY, 2)),
+            position = sp.tEva ((sp.world.physics.positionX + 5, sp.world.physics.positionY, 5)),
             focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0))
         )
         '''
