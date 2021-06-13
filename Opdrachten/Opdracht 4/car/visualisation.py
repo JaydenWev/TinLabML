@@ -141,7 +141,8 @@ class Visualisation (sp.Scene):
         self.windowRear = Window (size = (0.05, 0.14, 0.18), center = (-0.18, 0, -0.025),angle = 72) 
 
         self.roadCones = []
-        track = open ('default.track')
+        self.checkpoints = []
+        track = open ('test.track')
         
         for rowIndex, row in enumerate (track):
             for columnIndex, column in enumerate (row):
@@ -151,6 +152,13 @@ class Visualisation (sp.Scene):
                         center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.15),
                         color = (1, 0.3, 0),
                         group = 1
+                    ))
+                elif column == '/':
+                    self.roadCones.append (sp.Beam (
+                        size = (0.03, 1.3, 0.05),
+                        center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.15),
+                        color = (1, 0.3, 0.7),
+                        group = 2
                     ))
                 elif column == "@":
                     self.startX = columnIndex / 4 - 8
