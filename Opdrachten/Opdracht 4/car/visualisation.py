@@ -154,10 +154,10 @@ class Visualisation (sp.Scene):
                         group = 1
                     ))
                 elif column == '/':
-                    self.checkpoints.append (sp.Beam ( # Possible shapes: Beam, Cylinder, Ellipsoid, Cone
-                        size = (1, 1, 0.5),
+                    self.roadCones.append (sp.Beam (
+                        size = (0.03, 1.3, 0.05),
                         center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.15),
-                        color = (1, 0.3, 0.8),
+                        color = (1, 0.3, 0.7),
                         group = 2
                     ))
                 elif column == "@":
