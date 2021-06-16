@@ -83,3 +83,15 @@ class PidController:
         # Summation
         return yP + self.yI + yD
     
+    def setValue (self, p, i, d):
+        self.p = p
+        self.i = i
+        self.d = d
+        print("setValue", p,i,d )
+
+        
+    def addValue (self, p, i, d):
+        self.p += p
+        self.i += i
+        self.d += d
+        print("setValue", p,i,d )
