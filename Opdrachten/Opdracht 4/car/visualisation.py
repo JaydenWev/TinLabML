@@ -39,6 +39,7 @@ import random as rd
 import simpylc as sp
 
 import parameters as pm
+from timeit import default_timer as timer
 
 normalFloorColor = (0, 0.003, 0)
 collisionFloorColor = (1, 0, 0.3)
@@ -121,8 +122,8 @@ class Floor (sp.Beam):
 
 class Visualisation (sp.Scene):
     def __init__ (self):
-        super () .__init__ ()
         
+        super () .__init__ ()
         self.camera = sp.Camera ()
         
         self.floor = Floor (scene = self)
@@ -163,6 +164,7 @@ class Visualisation (sp.Scene):
         
     def display (self):
         if self.init:
+            
             self.init = False
             sp.world.physics.positionX.set (self.startX) 
             sp.world.physics.positionY.set (self.startY)
@@ -173,16 +175,23 @@ class Visualisation (sp.Scene):
             focus = sp.tEva ((sp.world.physics.focusX, sp.world.physics.focusY, 0))
         )
         '''
-        self.camera (   # Soccer match
+        start = timer()
+        if(start < 2):
+            self.camera (   # Soccer match
             position = sp.tEva ((sp.world.physics.positionX + 2, sp.world.physics.positionY, 2)),
-            focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0))
-        )
+            focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0)))
+            #timeCount = timeCount+1
+        else:
+            self.camera (   # Helicopter
+            position = sp.tEva ((0.0000001, 0, 10)),
+            focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0)))
+            #timeCount = timeCount+1
+            start = -timer()
         '''
-        self.camera (   # Helicopter
-            position = sp.tEva ((0.0000001, 0, 12)),
-            focus = sp.tEva ((0, 0, 0))
-        )
+
         '''
+
+        
         
         self.floor (parts = lambda:
             self.fuselage (position = (sp.world.physics.positionX, sp.world.physics.positionY, 0), rotation = sp.world.physics.attitudeAngle, parts = lambda:
