@@ -43,8 +43,7 @@ class Network:
         self.trainingSets = trainingSets
         self.inputNodes = []
         self.outputNodes = []
-        self.nodesInOutputLayer = 2
-        
+        self.nodesInOutputLayer = 5
     
     def createNetwork(self):
         for iOutput in range(self.nodesInOutputLayer): # Create output nodes
@@ -58,3 +57,13 @@ class Network:
                 edge.inputNode = self.inputNodes[iInput]          # Set edges input
                 edge.outputNode = self.outputNodes[iOutput]        # Set edges output
                 self.outputNodes[iOutput].inputEdges.append(edge)  # Set edge as input for output node
+    
+    def setBeginValues(self, P, I, D, slipTime): # , time):
+        self.inputNodes[0].setValue(P)
+        self.inputNodes[1].setValue(I)
+        self.inputNodes[2].setValue(D)
+        self.inputNodes[3].setValue(slipTime)
+
+    def putSpecificMatrixInBeginNode(self,index):
+        for iInput, value in enumerate (self.trainingSets[index]):
+            self.inputNodes[iInput].setValue(value)
