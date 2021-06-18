@@ -39,6 +39,7 @@ import random as rd
 import simpylc as sp
 
 import parameters as pm
+from timeit import default_timer as timer
 
 normalFloorColor = (0, 0.003, 0)
 collisionFloorColor = (1, 0, 0.3)
@@ -121,8 +122,8 @@ class Floor (sp.Beam):
 
 class Visualisation (sp.Scene):
     def __init__ (self):
-        super () .__init__ ()
         
+        super () .__init__ ()
         self.camera = sp.Camera ()
         
         self.floor = Floor (scene = self)
@@ -141,7 +142,8 @@ class Visualisation (sp.Scene):
         self.windowRear = Window (size = (0.05, 0.14, 0.18), center = (-0.18, 0, -0.025),angle = 72) 
 
         self.roadCones = []
-        track = open ('default.track')
+        self.checkpoints = []
+        track = open ('test.track')
         
         for rowIndex, row in enumerate (track):
             for columnIndex, column in enumerate (row):
@@ -151,6 +153,13 @@ class Visualisation (sp.Scene):
                         center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.15),
                         color = (1, 0.3, 0),
                         group = 1
+                    ))
+                elif column == '/':
+                    self.roadCones.append (sp.Beam (
+                        size = (0.08, 0.8, 0.05),
+                        center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.1),
+                        color = (1, 0.3, 0.7),
+                        group = 2
                     ))
                 elif column == "@":
                     self.startX = columnIndex / 4 - 8
@@ -163,11 +172,12 @@ class Visualisation (sp.Scene):
         
     def display (self):
         if self.init:
+            
             self.init = False
             sp.world.physics.positionX.set (self.startX) 
             sp.world.physics.positionY.set (self.startY)
         
-        '''
+    
         self.camera (   # First person
             position = sp.tEva ((sp.world.physics.positionX, sp.world.physics.positionY, 1)),
             focus = sp.tEva ((sp.world.physics.focusX, sp.world.physics.focusY, 0))
@@ -178,11 +188,15 @@ class Visualisation (sp.Scene):
             focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0))
         )
         '''
+
+        '''
         self.camera (   # Helicopter
             position = sp.tEva ((0.0000001, 0, 12)),
             focus = sp.tEva ((0, 0, 0))
         )
         '''
+
+        
         
         self.floor (parts = lambda:
             self.fuselage (position = (sp.world.physics.positionX, sp.world.physics.positionY, 0), rotation = sp.world.physics.attitudeAngle, parts = lambda:
