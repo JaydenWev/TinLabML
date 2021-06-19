@@ -42,3 +42,5 @@ sp.World (
     ps.Physics,
     vs.Visualisation
 )
+
+ss.exit()

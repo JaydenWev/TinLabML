@@ -23,7 +23,6 @@
 #
 # Removing this header ends your licence.
 #
-
 import time as tm
 import traceback as tb
 import math as mt
@@ -72,3 +71,7 @@ class LidarPilotBase:
         
         self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
         self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
+        
+        #bereken score van afgelopen baan
+        #zet dit en pid in bestand
+        #print(self.steeringPidController.getP(),self.steeringPidController.getI(),self.steeringPidController.getD())
