@@ -13,10 +13,13 @@ def start() :
     global p
     p = subprocess.Popen("py world.py")
     print("RunCode started world py")
+    emptyFile()
+    
 def stop() :
     global p
     p.terminate()
     sys.exit()
+    emptyFile()
 
 def restart() :
     global p
@@ -24,16 +27,26 @@ def restart() :
     #time.sleep()
     p = subprocess.Popen("py world.py")
     emptyFile()
+    
 def emptyFile():
     f = open("command.txt", "w")
     f.write("empty")
     f.close()
+
+
+    
 while(1):
     time.sleep(1)
     f = open("command.txt", "r")
     if(f.read() == "restart"):
         f.close()
         restart()
+    elif(f.read() == "stop")
+        f.close()
+        stop()
+    elif(f.read() == "start")
+        f.close()
+        start()
     else:
         f.close()
     
