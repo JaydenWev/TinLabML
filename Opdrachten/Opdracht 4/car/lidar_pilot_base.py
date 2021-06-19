@@ -29,12 +29,13 @@ import math as mt
 
 import timer as tr
 import pid_controller as pc
-
+import error_value as ev
 class LidarPilotBase:
     def __init__ (self):
+        self.physics = ev.ErrorValue(self.world)
         self.driveEnabled = False
         self.steeringAngle = 0
-        
+        self.amountOfSlip = 0
         self.timer = tr.Timer ()
         self.steeringPidController = pc.PidController (1.05, 0, -0.03)
         
@@ -46,6 +47,8 @@ class LidarPilotBase:
             tm.sleep (0.02)
             
     def sweep (self):   # Control algorithm to be tested
+        
+        
         self.nearestObstacleDistance = self.finity
         self.nearestObstacleAngle = 0
         
@@ -71,6 +74,11 @@ class LidarPilotBase:
         
         self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
         self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
+        print(self.amountOfSlip)
+        if self.physics.slipping() == True:
+            self.amountOfSlip += 1    
+   
+        
         
         #bereken score van afgelopen baan
         #zet dit en pid in bestand

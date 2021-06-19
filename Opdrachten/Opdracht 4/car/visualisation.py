@@ -156,8 +156,8 @@ class Visualisation (sp.Scene):
                     ))
                 elif column == '/':
                     self.roadCones.append (sp.Beam (
-                        size = (0.03, 1.3, 0.05),
-                        center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.15),
+                        size = (0.08, 0.8, 0.05),
+                        center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.1),
                         color = (1, 0.3, 0.7),
                         group = 2
                     ))
@@ -177,7 +177,7 @@ class Visualisation (sp.Scene):
             sp.world.physics.positionX.set (self.startX) 
             sp.world.physics.positionY.set (self.startY)
         
-        '''
+    
         self.camera (   # First person
             position = sp.tEva ((sp.world.physics.positionX, sp.world.physics.positionY, 1)),
             focus = sp.tEva ((sp.world.physics.focusX, sp.world.physics.focusY, 0))
@@ -189,6 +189,11 @@ class Visualisation (sp.Scene):
         )
         '''
 
+        '''
+        self.camera (   # Helicopter
+            position = sp.tEva ((0.0000001, 0, 12)),
+            focus = sp.tEva ((0, 0, 0))
+        )
         '''
 
         

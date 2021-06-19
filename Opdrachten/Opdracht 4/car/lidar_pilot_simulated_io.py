@@ -29,9 +29,11 @@ import lidar_pilot_scada_io as ls
 import sys
 class LidarPilotSimulatedIo (ls.LidarPilotScadaIo):
     def __init__ (self):
+        self.world = sp.world
         print ('Use up arrow to start, down arrow to stop')
         self.finity = sp.finity
         super () .__init__ ()
+        
         
     def input (self):   # Input from simulator
         super () .input ()
@@ -52,4 +54,6 @@ class LidarPilotSimulatedIo (ls.LidarPilotScadaIo):
         super () .output ()
         sp.world.physics.steeringAngle.set (self.steeringAngle)
         sp.world.physics.targetVelocity.set (self.targetVelocity)
-        
+    
+    
+       
