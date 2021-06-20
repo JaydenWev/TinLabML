@@ -143,7 +143,7 @@ class Visualisation (sp.Scene):
 
         self.roadCones = []
         self.checkpoints = []
-        track = open ('test.track')
+        track = open ('default_.track')
         
         for rowIndex, row in enumerate (track):
             for columnIndex, column in enumerate (row):
