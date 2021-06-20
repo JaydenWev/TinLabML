@@ -46,17 +46,13 @@ while(1):
     time.sleep(1)
     f = open("command.txt", "r")
     action = f.read()
+    f.close()
     if(action == "restart"):
-        f.close()
         restart()
     elif(action == "stop"):
-        f.close()
         stop()
     elif(action == "start"):
-        f.close()
         start()
-    else:
-        f.close()
     
 
 #while(1):
