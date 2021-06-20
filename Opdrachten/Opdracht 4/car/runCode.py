@@ -8,6 +8,8 @@ print("process started")
 
 #p = subprocess.Popen("py runCode.py")
 
+def calculatePID():
+    pass
 
 def start() :
     global p
@@ -27,13 +29,8 @@ def restart() :
     #time.sleep()
     p = subprocess.Popen("py world.py")
     emptyFile()
+    calculatePID()
 
-def restart_() :
-    global p
-    p.terminate()
-    #time.sleep()
-    #p = subprocess.Popen("py world.py")
-    emptyFile()
     
 def emptyFile():
     f = open("command.txt", "w")
@@ -58,6 +55,10 @@ while(1):
     else:
         f.close()
     
+
+
+
+
 
 #while(1):
 #    pass

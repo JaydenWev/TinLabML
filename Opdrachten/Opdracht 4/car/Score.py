@@ -1,8 +1,9 @@
 class Score:
 	
 	def calculateScore(){
-    getTime();
-    getSlip();
-    get
+    getTime()
+    getSlip()
+    getCollide()
+    adjustPid()
     
     }

@@ -30,7 +30,7 @@ import sys
 class LidarPilotSimulatedIo (ls.LidarPilotScadaIo):
     def __init__ (self):
         self.world = sp.world
-        print ('Use up arrow to start, down arrow to stop')
+        print ('Use up arrow to stop, down arrow to restart')
         self.finity = sp.finity
         super () .__init__ ()
         
