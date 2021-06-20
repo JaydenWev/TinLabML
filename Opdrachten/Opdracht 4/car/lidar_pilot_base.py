@@ -53,7 +53,7 @@ class LidarPilotBase:
             self.sweep ()
             self.output ()
             self.sharedValues[0] = round(tm.process_time() - self.startTime, 2)
-            print('Time: ', self.sharedValues[0], 's')
+            # print('Time: ', self.sharedValues[0], 's')
             fi.writeToFile(self.filePath, self.sharedValues)
             tm.sleep (0.02)
             
