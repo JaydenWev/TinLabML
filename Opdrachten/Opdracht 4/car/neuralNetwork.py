@@ -43,7 +43,7 @@ class Network:
         self.trainingSets = trainingSets
         self.inputNodes = []
         self.outputNodes = []
-        self.nodesInOutputLayer = 5
+        self.nodesInOutputLayer = 3
     
     def createNetwork(self):
         for iOutput in range(self.nodesInOutputLayer): # Create output nodes

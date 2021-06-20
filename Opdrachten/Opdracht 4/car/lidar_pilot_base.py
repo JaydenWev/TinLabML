@@ -38,12 +38,15 @@ class LidarPilotBase:
         self.amountOfSlip = 0
         self.timer = tr.Timer ()
         self.steeringPidController = pc.PidController (1.05, 0, -0.03)
+        self.startTime = tm.process_time()
         
         while True:
             self.timer.tick ()
             self.input ()
             self.sweep ()
             self.output ()
+            self.elapsedTime = tm.process_time() - self.startTime
+            print('Time: ', round(self.elapsedTime, 2), 's')
             tm.sleep (0.02)
             
     def sweep (self):   # Control algorithm to be tested
@@ -74,6 +77,7 @@ class LidarPilotBase:
         
         self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
         self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
+
         print(self.amountOfSlip)
         if self.physics.slipping() == True:
             self.amountOfSlip += 1    
