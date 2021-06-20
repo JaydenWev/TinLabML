@@ -46,6 +46,11 @@ class LidarPilotSimulatedIo (ls.LidarPilotScadaIo):
             f = open("command.txt", "w")
             f.write("restart")
             f.close()
+        elif key == 'KEY_UP':
+            #self.driveEnabled = False
+            f = open("command.txt", "w")
+            f.write("stop")
+            f.close()
         
         self.lidarDistances = sp.world.visualisation.lidar.distances
         self.lidarHalfApertureAngle = sp.world.visualisation.lidar.halfApertureAngle

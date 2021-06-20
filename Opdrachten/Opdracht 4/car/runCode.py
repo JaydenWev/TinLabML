@@ -18,14 +18,21 @@ def start() :
 def stop() :
     global p
     p.terminate()
-    sys.exit()
     emptyFile()
+    sys.exit()
 
 def restart() :
     global p
     p.terminate()
     #time.sleep()
     p = subprocess.Popen("py world.py")
+    emptyFile()
+
+def restart_() :
+    global p
+    p.terminate()
+    #time.sleep()
+    #p = subprocess.Popen("py world.py")
     emptyFile()
     
 def emptyFile():
@@ -38,13 +45,14 @@ def emptyFile():
 while(1):
     time.sleep(1)
     f = open("command.txt", "r")
-    if(f.read() == "restart"):
+    action = f.read()
+    if(action == "restart"):
         f.close()
         restart()
-    elif(f.read() == "stop")
+    elif(action == "stop"):
         f.close()
         stop()
-    elif(f.read() == "start")
+    elif(action == "start"):
         f.close()
         start()
     else:
