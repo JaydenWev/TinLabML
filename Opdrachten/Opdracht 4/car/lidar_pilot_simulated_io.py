@@ -26,7 +26,7 @@
 
 import simpylc as sp
 import lidar_pilot_scada_io as ls
-
+import sys
 class LidarPilotSimulatedIo (ls.LidarPilotScadaIo):
     def __init__ (self):
         self.world = sp.world
@@ -39,10 +39,13 @@ class LidarPilotSimulatedIo (ls.LidarPilotScadaIo):
         super () .input ()
         key = sp.getKey ()
         
-        if key == 'KEY_UP':
-            self.driveEnabled = True
-        elif key == 'KEY_DOWN':
-            self.driveEnabled = False
+        #if key == 'KEY_UP':
+        self.driveEnabled = True
+        if key == 'KEY_DOWN':
+            #self.driveEnabled = False
+            f = open("command.txt", "w")
+            f.write("restart")
+            f.close()
         
         self.lidarDistances = sp.world.visualisation.lidar.distances
         self.lidarHalfApertureAngle = sp.world.visualisation.lidar.halfApertureAngle

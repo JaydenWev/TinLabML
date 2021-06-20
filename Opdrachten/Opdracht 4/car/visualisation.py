@@ -233,6 +233,7 @@ class Visualisation (sp.Scene):
                 
         try:
             self.lidar.scan (self.fuselage.position, self.fuselage.rotation)
+            
         except Exception as exception: # Initial check
             pass
             # print ('Visualisation.display:', exception)

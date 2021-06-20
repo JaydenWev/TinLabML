@@ -95,3 +95,14 @@ class PidController:
         self.i += i
         self.d += d
         print("setValue", p,i,d )
+
+    def getP (self):
+        return self.p
+
+    def getI (self):
+        return self.i
+
+        
+    def getD (self):
+        return self.d
+

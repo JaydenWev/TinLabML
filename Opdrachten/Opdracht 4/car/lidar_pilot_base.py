@@ -23,7 +23,6 @@
 #
 # Removing this header ends your licence.
 #
-
 import time as tm
 import traceback as tb
 import math as mt
@@ -80,3 +79,7 @@ class LidarPilotBase:
             self.amountOfSlip += 1    
    
         
+        
+        #bereken score van afgelopen baan
+        #zet dit en pid in bestand
+        #print(self.steeringPidController.getP(),self.steeringPidController.getI(),self.steeringPidController.getD())
