@@ -30,6 +30,9 @@ import math as mt
 import timer as tr
 import pid_controller as pc
 import error_value as ev
+
+import FileInteractorJSON as fi
+
 class LidarPilotBase:
     def __init__ (self):
         self.physics = ev.ErrorValue(self.world)
@@ -49,11 +52,17 @@ class LidarPilotBase:
         ##kies pid waarde afhankelijk van voorgaande versies
         ##
         self.steeringPidController = pc.PidController (float(currentline[0]), float(currentline[1]), float(currentline[2]))
+        self.filePath = 'test.txt'
+        self.sharedValues = fi.readFromFile(self.filePath)
+        self.startTime = tm.process_time()
         while True:
             self.timer.tick ()
             self.input ()
             self.sweep ()
             self.output ()
+            self.sharedValues[0] = round(tm.process_time() - self.startTime, 2)
+            print('Time: ', self.sharedValues[0], 's')
+            fi.writeToFile(self.filePath, self.sharedValues)
             tm.sleep (0.02)
             
     def sweep (self):   # Control algorithm to be tested
@@ -84,9 +93,10 @@ class LidarPilotBase:
         
         self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
         self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
-        print(self.amountOfSlip)
+
         if self.physics.slipping() == True:
-            self.amountOfSlip += 1    
+            self.amountOfSlip += 1 
+            self.sharedValues[4] = self.amountOfSlip
    
         
         
