@@ -78,7 +78,6 @@ class LidarPilotBase:
         self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
         self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
 
-        print(self.amountOfSlip)
         if self.physics.slipping() == True:
             self.amountOfSlip += 1    
    
