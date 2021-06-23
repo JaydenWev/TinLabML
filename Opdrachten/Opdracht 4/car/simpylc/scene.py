@@ -86,6 +86,7 @@ class Scene:
         self._async = False
         self.collided = False
         self.finished = False
+        self.checkpointCheck = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         
     def _registerWithCamera (self):
         self.camera.scene = self
@@ -195,8 +196,17 @@ class Scene:
                             if collider.group == 2:
                                 self.finished = True
                                 print("Beam ID: ", collider.id) # How to send to the rest of the code
+                                fi.writeToFile('beamID.txt', collider.id)
+                                self.checkpointCheck[collider.id-1] = 1
                                 # self.values = fi.readFromFile
                                 # self.values[5] = 1
+                                self.counter = 0
+                                for index, value in enumerate(self.checkpointCheck):
+                                    if self.checkpointCheck[index]:
+                                        self.counter += 1
+                                    if self.counter == 17:
+                                        fi.writeToFile('command.txt', 'restart')
+
                             self.collided = True
                             return
                     

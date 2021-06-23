@@ -157,7 +157,7 @@ class Visualisation (sp.Scene):
                     ))
                 elif column == '|':
                     self.roadCones.append (sp.Beam (
-                        size = (0.8, 0.8, 0.05),
+                        size = (0.08, 0.8, 0.05),
                         center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.1),
                         color = (1, 0.3, 0.7),
                         group = 2,
@@ -166,7 +166,7 @@ class Visualisation (sp.Scene):
                     self.beamCounter += 1
                 elif column == '/':
                     self.roadCones.append (sp.Beam (
-                        size = (0.8, 0.8, 0.05),
+                        size = (0.8, 0.08, 0.05),
                         center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.1),
                         color = (1, 0.3, 0.7),
                         group = 2,
