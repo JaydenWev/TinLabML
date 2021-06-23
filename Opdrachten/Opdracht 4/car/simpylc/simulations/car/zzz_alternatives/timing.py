@@ -1,5 +1,3 @@
-#! /usr/bin/python
-
 # ====== Legal notices
 #
 # Copyright (C) 2013  - 2020 GEATEC engineering
@@ -26,25 +24,18 @@
 # Removing this header ends your licence.
 #
 
-import os
-import sys as ss
-import FileInteractorJSON as fi
-
-
-ss.path.append (os.path.abspath ('../../..')) # If you want to store your simulations somewhere else, put SimPyLC in your PYTHONPATH environment variable
-path = fi.readFromFile('path.path')
-ss.path.insert(1, path)
-
 import simpylc as sp
 
-import lidar_pilot_simulated_io as ls
-import physics as ps
-import visualisation as vs
+class Timing (sp.Chart):
+    def __init__ (self):
+        sp.Chart.__init__ (self)
+        
+    def define (self):
+        self.channel (sp.world.physics.steeringAngle, sp.aqua, -90, 90, 100)
+        self.channel (sp.world.physics.targetVelocity, sp.white, -1, 2, 100)
+        self.channel (sp.world.physics.velocity, sp.yellow, -1, 2, 100)
+        self.channel (sp.world.physics.radialAcceleration, sp.lime, -4, 4, 100)
+        self.channel (sp.world.physics.slipping, sp.red)
 
-sp.World (
-    ls.LidarPilotSimulatedIo,
-    ps.Physics,
-    vs.Visualisation
-)
-
-ss.exit()
+        
+                

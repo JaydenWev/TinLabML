@@ -1,28 +1,29 @@
-# ====== Legal notices
-#
-# Copyright (C) 2013 - 2020 GEATEC engineering
-#
-# This program is free software.
-# You can use, redistribute and/or modify it, but only under the terms stated in the QQuickLicence.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY, without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the QQuickLicence for details.
-#
-# The QQuickLicense can be accessed at: http://www.qquick.org/license.html
-#
-# __________________________________________________________________________
-#
-#
-#  THIS PROGRAM IS FUNDAMENTALLY UNSUITABLE FOR CONTROLLING REAL SYSTEMS !!
-#
-# __________________________________________________________________________
-#
-# It is meant for training purposes only.
-#
-# Removing this header ends your licence.
-#
+'''
+====== Legal notices
+
+Copyright (C) 2013 - 2021 GEATEC engineering
+
+This program is free software.
+You can use, redistribute and/or modify it, but only under the terms stated in the QQuickLicense.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY, without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the QQuickLicense for details.
+
+The QQuickLicense can be accessed at: http://www.qquick.org/license.html
+
+__________________________________________________________________________
+
+
+ THIS PROGRAM IS FUNDAMENTALLY UNSUITABLE FOR CONTROLLING REAL SYSTEMS !!
+
+__________________________________________________________________________
+
+It is meant for training purposes only.
+
+Removing this header ends your license.
+'''
 
 '''
 
@@ -39,7 +40,6 @@ import random as rd
 import simpylc as sp
 
 import parameters as pm
-from timeit import default_timer as timer
 
 normalFloorColor = (0, 0.003, 0)
 collisionFloorColor = (1, 0, 0.3)
@@ -56,26 +56,19 @@ class Lidar:
         
     def scan (self, mountPosition, mountAngle):
         self.distances = [sp.finity for angle in range (self.apertureAngle)]
-        all = [(sp.finity, angle) for angle in range (-180, 180)]
         
         for obstacle in self.obstacles:
             relativePosition = sp.tSub (obstacle.center, mountPosition) 
             distance = sp.tNor (relativePosition)
             absoluteAngle = sp.atan2 (relativePosition [1], relativePosition [0])
-            relativeAngle = (round (absoluteAngle - mountAngle) + 180) % 360 - 180
-
-            if distance < all [relativeAngle][0]:
-                all [relativeAngle] = (distance, relativeAngle)   # In case of coincidence, favor nearby obstacle  
+            relativeAngle = (round (absoluteAngle - mountAngle) + 180) % 360 - 180 
                 
             if -self.halfApertureAngle <= relativeAngle < self.halfApertureAngle - 1:
-                self.distances [relativeAngle] = min (distance, self.distances [relativeAngle])    # In case of coincidence, favor nearby obstacle
-
-        #print (all)
+                self.distances [relativeAngle] = round (min (distance, self.distances [relativeAngle]), 4)    # In case of coincidence, favor nearby obstacle
 
 class Line (sp.Cylinder):
     def __init__ (self, **arguments):
        super () .__init__ (size = (0.01, 0.01, 0), axis = (1, 0, 0), angle = 90, color = (0, 1, 1), **arguments)
-
 
 class BodyPart (sp.Beam):
     def __init__ (self, **arguments):
@@ -122,8 +115,8 @@ class Floor (sp.Beam):
 
 class Visualisation (sp.Scene):
     def __init__ (self):
-        
         super () .__init__ ()
+        
         self.camera = sp.Camera ()
         
         self.floor = Floor (scene = self)
@@ -142,9 +135,7 @@ class Visualisation (sp.Scene):
         self.windowRear = Window (size = (0.05, 0.14, 0.18), center = (-0.18, 0, -0.025),angle = 72) 
 
         self.roadCones = []
-        self.checkpoints = []
-        track = open ('default_.track')
-        self.beamCounter = 0
+        track = open ('default.track')
         
         for rowIndex, row in enumerate (track):
             for columnIndex, column in enumerate (row):
@@ -153,26 +144,8 @@ class Visualisation (sp.Scene):
                         size = (0.07, 0.07, 0.15),
                         center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.15),
                         color = (1, 0.3, 0),
-                        group = 2
+                        group = 1
                     ))
-                elif column == '|':
-                    self.roadCones.append (sp.Beam (
-                        size = (0.8, 0.8, 0.05),
-                        center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.1),
-                        color = (1, 0.3, 0.7),
-                        group = 2,
-                        id = self.beamCounter
-                    ))
-                    self.beamCounter += 1
-                elif column == '/':
-                    self.roadCones.append (sp.Beam (
-                        size = (0.8, 0.8, 0.05),
-                        center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.1),
-                        color = (1, 0.3, 0.7),
-                        group = 2,
-                        id = self.beamCounter
-                    ))
-                    self.beamCounter += 1
                 elif column == "@":
                     self.startX = columnIndex / 4 - 8
                     self.startY = rowIndex / 2 - 8
@@ -184,12 +157,10 @@ class Visualisation (sp.Scene):
         
     def display (self):
         if self.init:
-            
             self.init = False
             sp.world.physics.positionX.set (self.startX) 
             sp.world.physics.positionY.set (self.startY)
-
-    
+        
         '''
         self.camera (   # First person
             position = sp.tEva ((sp.world.physics.positionX, sp.world.physics.positionY, 1)),
@@ -197,18 +168,15 @@ class Visualisation (sp.Scene):
         )
         '''
         self.camera (   # Soccer match
-            position = sp.tEva ((sp.world.physics.positionX + 5, sp.world.physics.positionY, 5)),
+            position = sp.tEva ((sp.world.physics.positionX + 2, sp.world.physics.positionY, 2)),
             focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0))
         )
-
         '''
         self.camera (   # Helicopter
-            position = sp.tEva ((0.0000001, 0, 12)),
+            position = sp.tEva ((0.0000001, 0, 20)),
             focus = sp.tEva ((0, 0, 0))
         )
         '''
-
-        
         
         self.floor (parts = lambda:
             self.fuselage (position = (sp.world.physics.positionX, sp.world.physics.positionY, 0), rotation = sp.world.physics.attitudeAngle, parts = lambda:
@@ -245,7 +213,6 @@ class Visualisation (sp.Scene):
                 
         try:
             self.lidar.scan (self.fuselage.position, self.fuselage.rotation)
-            
         except Exception as exception: # Initial check
             pass
             # print ('Visualisation.display:', exception)

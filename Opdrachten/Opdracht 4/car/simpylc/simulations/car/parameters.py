@@ -1,8 +1,6 @@
-#! /usr/bin/python
-
 # ====== Legal notices
 #
-# Copyright (C) 2013  - 2020 GEATEC engineering
+# Copyright (C) 2013 - 2021 GEATEC engineering
 #
 # This program is free software.
 # You can use, redistribute and/or modify it, but only under the terms stated in the QQuickLicence.
@@ -12,7 +10,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the QQuickLicence for details.
 #
-# The QQuickLicense can be accessed at: http://www.qquick.org/license.html
+# The QQuickLicense can be accessed at: http://www.geatec.com/qqLicence.html
 #
 # __________________________________________________________________________
 #
@@ -26,25 +24,11 @@
 # Removing this header ends your licence.
 #
 
-import os
-import sys as ss
-import FileInteractorJSON as fi
-
-
-ss.path.append (os.path.abspath ('../../..')) # If you want to store your simulations somewhere else, put SimPyLC in your PYTHONPATH environment variable
-path = fi.readFromFile('path.path')
-ss.path.insert(1, path)
-
 import simpylc as sp
 
-import lidar_pilot_simulated_io as ls
-import physics as ps
-import visualisation as vs
+wheelDiameter = 0.10
+wheelRadius = wheelDiameter / 2
+displacementPerWheelAngle = sp.radiansPerDegree * wheelRadius
 
-sp.World (
-    ls.LidarPilotSimulatedIo,
-    ps.Physics,
-    vs.Visualisation
-)
-
-ss.exit()
+wheelBase = 0.40
+wheelShift = wheelBase / 2

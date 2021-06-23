@@ -23,47 +23,41 @@
 #
 # Removing this header ends your licence.
 #
+
 import time as tm
 import traceback as tb
 import math as mt
 
-import timer as tr
-import pid_controller as pc
-import error_value as ev
+import simpylc as sp
 
-import FileInteractorJSON as fi
-
-class LidarPilotBase:
+class LidarPilot:
     def __init__ (self):
-        self.physics = ev.ErrorValue(self.world)
+        print ('Use up arrow to start, down arrow to stop')
+        
         self.driveEnabled = False
-        self.steeringAngle = 0
-        self.amountOfSlip = 0
-        self.timer = tr.Timer ()
-        self.steeringPidController = pc.PidController (1.05, 0, -0.03)
-
-        self.filePath = 'test.txt'
-        self.sharedValues = fi.readFromFile(self.filePath)
-        self.startTime = tm.process_time()
-
         
         while True:
-            self.timer.tick ()
             self.input ()
             self.sweep ()
             self.output ()
-            self.sharedValues[0] = round(tm.process_time() - self.startTime, 2)
-            # print('Time: ', self.sharedValues[0], 's')
-            fi.writeToFile(self.filePath, self.sharedValues)
             tm.sleep (0.02)
-            
+        
+    def input (self):   # Input from simulator
+        key = sp.getKey ()
+        
+        if key == 'KEY_UP':
+            self.driveEnabled = True
+        elif key == 'KEY_DOWN':
+            self.driveEnabled = False
+        
+        self.lidarDistances = sp.world.visualisation.lidar.distances
+        self.lidarHalfApertureAngle = sp.world.visualisation.lidar.halfApertureAngle
+        
     def sweep (self):   # Control algorithm to be tested
-        
-        
-        self.nearestObstacleDistance = self.finity
+        self.nearestObstacleDistance = sp.finity
         self.nearestObstacleAngle = 0
         
-        self.nextObstacleDistance = self.finity
+        self.nextObstacleDistance = sp.finity
         self.nextObstacleAngle = 0
 
         for lidarAngle in range (-self.lidarHalfApertureAngle, self.lidarHalfApertureAngle):
@@ -83,15 +77,10 @@ class LidarPilotBase:
         self.targetObstacleDistance = (self.nearestObstacleDistance + self.nextObstacleDistance) / 2
         self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle) / 2
         
-        self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
+        self.steeringAngle = self.targetObstacleAngle
         self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
-
-        if self.physics.slipping() == True:
-            self.amountOfSlip += 1 
-            self.sharedValues[4] = self.amountOfSlip
-   
+    
+    def output (self):  # Output to simulator
+        sp.world.physics.steeringAngle.set (self.steeringAngle)
+        sp.world.physics.targetVelocity.set (self.targetVelocity)
         
-        
-        #bereken score van afgelopen baan
-        #zet dit en pid in bestand
-        #print(self.steeringPidController.getP(),self.steeringPidController.getI(),self.steeringPidController.getD())
