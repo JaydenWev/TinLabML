@@ -144,6 +144,7 @@ class Visualisation (sp.Scene):
         self.roadCones = []
         self.checkpoints = []
         track = open ('default_.track')
+        self.beamCounter = 0
         
         for rowIndex, row in enumerate (track):
             for columnIndex, column in enumerate (row):
@@ -152,15 +153,26 @@ class Visualisation (sp.Scene):
                         size = (0.07, 0.07, 0.15),
                         center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.15),
                         color = (1, 0.3, 0),
-                        group = 1
-                    ))
-                elif column == '/':
-                    self.roadCones.append (sp.Beam (
-                        size = (0.08, 0.8, 0.05),
-                        center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.1),
-                        color = (1, 0.3, 0.7),
                         group = 2
                     ))
+                elif column == '|':
+                    self.roadCones.append (sp.Beam (
+                        size = (0.8, 0.8, 0.05),
+                        center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.1),
+                        color = (1, 0.3, 0.7),
+                        group = 2,
+                        id = self.beamCounter
+                    ))
+                    self.beamCounter += 1
+                elif column == '/':
+                    self.roadCones.append (sp.Beam (
+                        size = (0.8, 0.8, 0.05),
+                        center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.1),
+                        color = (1, 0.3, 0.7),
+                        group = 2,
+                        id = self.beamCounter
+                    ))
+                    self.beamCounter += 1
                 elif column == "@":
                     self.startX = columnIndex / 4 - 8
                     self.startY = rowIndex / 2 - 8

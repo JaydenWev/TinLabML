@@ -28,8 +28,12 @@
 
 import os
 import sys as ss
+import FileInteractorJSON as fi
+
 
 ss.path.append (os.path.abspath ('../../..')) # If you want to store your simulations somewhere else, put SimPyLC in your PYTHONPATH environment variable
+path = fi.readFromFile('path.path')
+ss.path.insert(1, path)
 
 import simpylc as sp
 
