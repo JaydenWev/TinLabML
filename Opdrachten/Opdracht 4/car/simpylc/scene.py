@@ -198,8 +198,6 @@ class Scene:
                                 print("Beam ID: ", collider.id) # How to send to the rest of the code
                                 fi.writeToFile('beamID.txt', collider.id)
                                 self.checkpointCheck[collider.id-1] = 1
-                                # self.values = fi.readFromFile
-                                # self.values[5] = 1
                                 self.counter = 0
                                 for index, value in enumerate(self.checkpointCheck):
                                     if self.checkpointCheck[index]:

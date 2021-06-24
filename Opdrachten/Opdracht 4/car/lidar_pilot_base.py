@@ -23,6 +23,8 @@
 #
 # Removing this header ends your licence.
 #
+
+
 import time as tm
 import traceback as tb
 import math as mt
@@ -40,8 +42,18 @@ class LidarPilotBase:
         self.steeringAngle = 0
         self.amountOfSlip = 0
         self.timer = tr.Timer ()
-        self.steeringPidController = pc.PidController (1.05, 0, -0.03)
-
+        
+        ##
+        f = open("PIDvalues.txt", "r")
+        line = f.read()
+        f.close()
+        currentline = line.split(",")
+        #total = str(currentline[0] + currentline[1] + currentline [2]) + "\n"
+        #PIDvalues
+        print("PID VALUES FROM FILE: ", currentline[0] , currentline[1] , currentline [2])
+        ##kies pid waarde afhankelijk van voorgaande versies
+        ##
+        self.steeringPidController = pc.PidController (float(currentline[0]), float(currentline[1]), float(currentline[2]))
         self.filePath = 'test.txt'
         self.sharedValues = fi.readFromFile(self.filePath)
         self.startTime = tm.process_time()
