@@ -45,6 +45,7 @@ class LidarPilotBase:
         self.filePath = 'test.txt'
         self.sharedValues = fi.readFromFile(self.filePath)
         self.startTime = tm.process_time()
+        self.looped = 0
 
         
         while True:
@@ -58,33 +59,66 @@ class LidarPilotBase:
             tm.sleep (0.02)
             
     def sweep (self):   # Control algorithm to be tested
-        
-        
         self.nearestObstacleDistance = self.finity
         self.nearestObstacleAngle = 0
         
-        self.nextObstacleDistance = self.finity
+        self.nextObstacleDistance = self.finity 
         self.nextObstacleAngle = 0
 
+        self.next2ObstacleDistance = self.finity
+        self.next2ObstacleAngle = 0
+
+        self.next3ObstacleDistance = self.finity
+        self.next3ObstacleAngle = 0
         for lidarAngle in range (-self.lidarHalfApertureAngle, self.lidarHalfApertureAngle):
             lidarDistance = self.lidarDistances [lidarAngle]
-            
-            if lidarDistance < self.nearestObstacleDistance:
-                self.nextObstacleDistance =  self.nearestObstacleDistance
-                self.nextObstacleAngle = self.nearestObstacleAngle
-                
-                self.nearestObstacleDistance = lidarDistance 
-                self.nearestObstacleAngle = lidarAngle
+            if(lidarDistance < 3):
+                if lidarDistance < self.nearestObstacleDistance:
+                    self.next3ObstacleDistance = self.next2ObstacleDistance
+                    self.next3ObstacleAngle = self.next2ObstacleAngle
 
-            elif lidarDistance < self.nextObstacleDistance:
-                self.nextObstacleDistance = lidarDistance
-                self.nextObstacleAngle = lidarAngle
-           
-        self.targetObstacleDistance = (self.nearestObstacleDistance + self.nextObstacleDistance) / 2
-        self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle) / 2
-        
-        self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
-        self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
+                    self.next2ObstacleDistance = self.nextObstacleDistance 
+                    self.next2ObstacleAngle = self.nextObstacleAngle
+
+                    self.nextObstacleDistance =  self.nearestObstacleDistance
+                    self.nextObstacleAngle = self.nearestObstacleAngle
+                    
+                    self.nearestObstacleDistance = lidarDistance 
+                    self.nearestObstacleAngle = lidarAngle
+
+                elif lidarDistance < self.nextObstacleDistance:
+                    self.next3ObstacleDistance = self.next2ObstacleDistance
+                    self.next3ObstacleAngle = self.next2ObstacleAngle
+                    
+                    self.next2ObstacleDistance = self.nextObstacleDistance
+                    self.next2ObstacleAngle = self.nextObstacleAngle
+
+                    self.nextObstacleDistance = lidarDistance
+                    self.nextObstacleAngle = lidarAngle
+
+
+                elif lidarDistance < self.next2ObstacleDistance:
+                    self.next3ObstacleDistance = self.next2ObstacleDistance
+                    self.next3ObstacleAngle = self.next2ObstacleAngle
+
+                    self.next2ObstacleDistance = lidarDistance
+                    self.next2ObstacleAngle = lidarAngle
+
+
+                elif lidarDistance < self.next3ObstacleDistance:
+                    self.next3ObstacleDistance = lidarDistance
+                    self.next3ObstacleAngle = lidarAngle
+            if(self.looped < 3):
+                self.targetObstacleDistance = (self.nearestObstacleDistance + self.nextObstacleDistance) / 2
+                self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle) / 2
+                self.looped += 1
+            elif(self.looped == 3):
+                self.targetObstacleDistance = (self.nearestObstacleDistance + self.nextObstacleDistance + self.next2ObstacleDistance + self.next3ObstacleDistance) / 4
+                self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle + self.next2ObstacleAngle + self.next3ObstacleAngle) / 4
+                self.looped = 0
+            
+            self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
+            self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
 
         if self.physics.slipping() == True:
             self.amountOfSlip += 1 
