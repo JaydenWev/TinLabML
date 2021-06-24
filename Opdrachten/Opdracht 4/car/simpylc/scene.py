@@ -202,8 +202,11 @@ class Scene:
                                 for index, value in enumerate(self.checkpointCheck):
                                     if self.checkpointCheck[index]:
                                         self.counter += 1
-                                    if self.counter == 17:
-                                        fi.writeToFile('command.txt', 'restart')
+                                        print("Counter: ", self.counter)
+                                    if self.counter == 20:
+                                        f = open("command.txt", "w")
+                                        f.write("restart")
+                                        f.close()
 
                             self.collided = True
                             return
