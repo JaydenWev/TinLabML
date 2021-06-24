@@ -2,6 +2,8 @@ import subprocess
 import sys
 import time
 import random
+import FileInteractorJSON as fi
+
 testvalue1 = [84.73, 1.05, 0, -0.03, 1287]
 testvalue2 = [83.73, 1.03, 0, -0.04, 1287]
 testvalue3 = [82.73, 1.03, 0, -0.03, 1287]
@@ -28,6 +30,19 @@ def stop() :
     print("process stopped")
     sys.exit()
 
+def forceStop() :
+    global p
+    p.terminate()
+    emptyFile()
+    print("process stopped")
+
+
+    line = fi.readFromFile("result.txt")
+    line[0]=1000
+    fi.writeToFile("result.txt", line)
+
+    sys.exit()
+
 def restart() :
     global p
     p.terminate()
@@ -51,7 +66,7 @@ def readPid():
     print("PID VALUES FROM FILE: ", previousPid[0] , previousPid[1] , previousPid [2])
     return previousPid
 
-def writePid(pid):    
+def writePid(pid):
     f = open("PIDvalues.txt", "w")
     string = str(pid[0])+","+str(pid[1])+","+str(pid[2])
     f.write(string)
@@ -82,7 +97,7 @@ while(1):
         previousPid = readPid()
         
     elif(action == "stop"):
-        stop()
+        forceStop()
     elif(action == "start"):
         start()
     

@@ -54,7 +54,7 @@ class LidarPilotBase:
         ##kies pid waarde afhankelijk van voorgaande versies
         ##
         self.steeringPidController = pc.PidController (float(currentline[0]), float(currentline[1]), float(currentline[2]))
-        self.filePath = 'test.txt'
+        self.filePath = 'result.txt'
         self.sharedValues = fi.readFromFile(self.filePath)
         self.startTime = tm.process_time()
         self.looped = 0
