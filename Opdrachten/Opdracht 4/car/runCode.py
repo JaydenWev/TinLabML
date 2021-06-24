@@ -94,21 +94,21 @@ while(1):
         #mutated is the pid that has been randomly changed
         
         if(int(file[0]) > previousTime):     #when not improved
-            mutatedPid = previousPid
+            currentPid = previousPid
         else:
             previousPid = readPid()
             
         if (i == 0):    #&& file[0] < previousTime
-            mutatedPid[0] = float(previousPid[0]) + random.randint(-10, 10)/100
+            currentPid[0] = float(previousPid[0]) + random.randint(-10, 10)/100
             i =+ 1
         elif(i == 1):
-            mutatedPid[1] = float(previousPid[1]) + random.randint(-10, 10)/100
+            currentPid[1] = float(previousPid[1]) + random.randint(-10, 10)/100
             i =+ 1
         elif(i == 2):
-            mutatedPid[2] = float(previousPid[2]) + random.randint(-10, 10)/100
+            currentPid[2] = float(previousPid[2]) + random.randint(-10, 10)/100
             i = 0
         print("Previous pid before write",previousPid)
-        writePid(mutatedPid)
+        writePid(currentPid)
         restart()
         #previousPid = readPid()
         
