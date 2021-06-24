@@ -3,11 +3,7 @@ import sys
 import time
 import random
 import FileInteractorJSON as fi
-
-testvalue1 = [84.73, 1.05, 0, -0.03, 1287]
-testvalue2 = [83.73, 1.03, 0, -0.04, 1287]
-testvalue3 = [82.73, 1.03, 0, -0.03, 1287]
-testvalue4 = [81.73, 1.01, 0, -0.05, 1287]
+bestValues = [94.73, 1.05, 0, -0.03, 1287]
 p = subprocess.Popen("py world.py")
 
 print("process started")
@@ -71,30 +67,50 @@ def writePid(pid):
     string = str(pid[0])+","+str(pid[1])+","+str(pid[2])
     f.write(string)
     f.close()
+    
+def readConcludedFile():
+    f = open("test.txt", "r")
+    fileValues = f.read()
+    f.close()
+    fileValues = fileValues.split(",")
+    print(fileValues)
+    return fileValues
 
 #total = str(currentline[0] + currentline[1] + currentline [2]) + "\n"
 #PIDvalues
 previousPid = readPid()
 i = 0
+#previousTime = fi.readFromFile("test.txt")[0]
+previousTime = 90
 while(1):
     time.sleep(1)
     f = open("command.txt", "r")
     action = f.read()
     f.close()
     if(action == "restart"):        #nog checken of waarde idd verbeterd
-        if (i == 0):
-            previousPid[0] = float(previousPid[0]) + random.randint(-10, 10)/100
+        file = readConcludedFile()
+
+        #previous is the run that has been done with the fastest time
+        #mutated is the pid that has been randomly changed
+        
+        if(int(file[0]) > previousTime):     #when not improved
+            mutatedPid = previousPid
+        else:
+            previousPid = readPid()
+            
+        if (i == 0):    #&& file[0] < previousTime
+            mutatedPid[0] = float(previousPid[0]) + random.randint(-10, 10)/100
             i =+ 1
         elif(i == 1):
-            previousPid[1] = float(previousPid[1]) + random.randint(-10, 10)/100
+            mutatedPid[1] = float(previousPid[1]) + random.randint(-10, 10)/100
             i =+ 1
         elif(i == 2):
-            previousPid[2] = float(previousPid[2]) + random.randint(-10, 10)/100
+            mutatedPid[2] = float(previousPid[2]) + random.randint(-10, 10)/100
             i = 0
-        print("precvious pid before write",previousPid)
-        writePid(previousPid)
+        print("Previous pid before write",previousPid)
+        writePid(mutatedPid)
         restart()
-        previousPid = readPid()
+        #previousPid = readPid()
         
     elif(action == "stop"):
         forceStop()
