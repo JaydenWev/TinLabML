@@ -195,14 +195,12 @@ class Scene:
                         if collision (collider, collidee):
                             if collider.group == 2:
                                 self.finished = True
-                                print("Beam ID: ", collider.id) # How to send to the rest of the code
-                                fi.writeToFile('beamID.txt', collider.id)
+                                # fi.writeToFile('beamID.txt', collider.id) # File is not being used anymore
                                 self.checkpointCheck[collider.id-1] = 1
                                 self.counter = 0
                                 for index, value in enumerate(self.checkpointCheck):
                                     if self.checkpointCheck[index]:
                                         self.counter += 1
-                                        print("Counter: ", self.counter)
                                     if self.counter == 20:
                                         f = open("command.txt", "w")
                                         f.write("restart")
