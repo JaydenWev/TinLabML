@@ -59,16 +59,17 @@ class Lidar:
         all = [(sp.finity, angle) for angle in range (-180, 180)]
         
         for obstacle in self.obstacles:
-            relativePosition = sp.tSub (obstacle.center, mountPosition) 
-            distance = sp.tNor (relativePosition)
-            absoluteAngle = sp.atan2 (relativePosition [1], relativePosition [0])
-            relativeAngle = (round (absoluteAngle - mountAngle) + 180) % 360 - 180
+            if obstacle.group == 1:
+                relativePosition = sp.tSub (obstacle.center, mountPosition) 
+                distance = sp.tNor (relativePosition)
+                absoluteAngle = sp.atan2 (relativePosition [1], relativePosition [0])
+                relativeAngle = (round (absoluteAngle - mountAngle) + 180) % 360 - 180
 
-            if distance < all [relativeAngle][0]:
-                all [relativeAngle] = (distance, relativeAngle)   # In case of coincidence, favor nearby obstacle  
-                
-            if -self.halfApertureAngle <= relativeAngle < self.halfApertureAngle - 1:
-                self.distances [relativeAngle] = min (distance, self.distances [relativeAngle])    # In case of coincidence, favor nearby obstacle
+                if distance < all [relativeAngle][0]:
+                    all [relativeAngle] = (distance, relativeAngle)   # In case of coincidence, favor nearby obstacle  
+                    
+                if -self.halfApertureAngle <= relativeAngle < self.halfApertureAngle - 1:
+                    self.distances [relativeAngle] = min (distance, self.distances [relativeAngle])    # In case of coincidence, favor nearby obstacle
 
         #print (all)
 
@@ -153,7 +154,7 @@ class Visualisation (sp.Scene):
                         size = (0.07, 0.07, 0.15),
                         center = (columnIndex / 4 - 8, rowIndex / 2 - 8, 0.15),
                         color = (1, 0.3, 0),
-                        group = 2
+                        group = 1
                     ))
                 elif column == '|':
                     self.roadCones.append (sp.Beam (

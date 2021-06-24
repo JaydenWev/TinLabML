@@ -5,6 +5,7 @@ import random
 import FileInteractorJSON as fi
 bestValues = [94.73, 1.05, 0, -0.03, 1287]
 p = subprocess.Popen("py world.py")
+resultPath = "result.txt"
 
 print("process started")
 
@@ -18,13 +19,6 @@ def start() :
     p = subprocess.Popen("py world.py")
     print("RunCode started world py")
     emptyFile()
-    
-def stop() :
-    global p
-    p.terminate()
-    emptyFile()
-    print("process stopped")
-    sys.exit()
 
 def forceStop() :
     global p
@@ -33,9 +27,9 @@ def forceStop() :
     print("process stopped")
 
 
-    line = fi.readFromFile("result.txt")
+    line = fi.readFromFile(resultPath)
     line[0]=1000
-    fi.writeToFile("result.txt", line)
+    fi.writeToFile(resultPath, line)
 
     sys.exit()
 
@@ -67,28 +61,21 @@ def writePid(pid):
     string = str(pid[0])+","+str(pid[1])+","+str(pid[2])
     f.write(string)
     f.close()
-    
-def readConcludedFile():
-    f = open("test.txt", "r")
-    fileValues = f.read()
-    f.close()
-    fileValues = fileValues.split(",")
-    print(fileValues)
-    return fileValues
 
 #total = str(currentline[0] + currentline[1] + currentline [2]) + "\n"
 #PIDvalues
-previousPid = readPid()
+currentPid = readPid()
+previousPid = currentPid
 i = 0
-#previousTime = fi.readFromFile("test.txt")[0]
-previousTime = 90
+previousTime = fi.readFromFile(resultPath)[0]
+print("previousTime: ", previousTime)
 while(1):
     time.sleep(1)
     f = open("command.txt", "r")
     action = f.read()
     f.close()
     if(action == "restart"):        #nog checken of waarde idd verbeterd
-        file = readConcludedFile()
+        file = fi.readFromFile(resultPath)
 
         #previous is the run that has been done with the fastest time
         #mutated is the pid that has been randomly changed
